@@ -18,18 +18,26 @@ namespace MonoPaint.Shapes
         public override void Load()
         {
             shapeData = new Color[(width*height)];
-/*
-            const double PI = 3.1415926535;
-            double i, angle, x1, y1;
 
-            for(i = 0; i < 360; i += 0.1)
+            float diam = width / 2f;
+            float diamsq = diam * diam;
+
+            for (int x = 0; x < width; x++)
             {
-                    angle = i;
-                    x1 = (width/2) * Math.Cos(angle * PI / 180);
-                    y1 = (height/2) * Math.Sin(angle * PI / 180);
-                    shapeData(x + x1, y + y1, color);
+                for (int y = 0; y < width; y++)
+                {
+                    int index = x * width + y;
+                    Vector2 pos = new Vector2(x - diam, y - diam);
+                    if (pos.LengthSquared() <= diamsq)
+                    {
+                        shapeData[index] = Color.White;
+                    }
+                    else
+                    {
+                        shapeData[index] = Color.Transparent;
+                    }
+                }
             }
-*/
 
             shapeTexture = new Texture2D(ContentHandler.Instance.Graphics, width, height); 
             shapeTexture.SetData(shapeData);

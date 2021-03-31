@@ -17,9 +17,9 @@ namespace MonoPaint
         {
             shapes = new List<aShape>();
             
-            //aShape Ellps1 = new mEllipse(50, 50, Color.HotPink);
-            //Ellps1.X = 250; Ellps1.Y = 400;
-            //shapes.Add(Ellps1);
+            aShape Ellps1 = new mEllipse(50, 50, Color.HotPink);
+            Ellps1.X = 250; Ellps1.Y = 400;
+            shapes.Add(Ellps1);
 
             aShape Rect1 = new mRectangle(75, 100, Color.BurlyWood);
             Rect1.X = 450; Rect1.Y = 200;
