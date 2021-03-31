@@ -5,7 +5,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using Input;
 using MonoPaint.Shapes;
+
 
 namespace MonoPaint
 {
@@ -46,7 +48,10 @@ namespace MonoPaint
 
         public void Update()
         {
-
+            if(InputManger.IsPressed(MouseInput.LeftButton))
+            {
+                Console.WriteLine("Mouse Left pressed");
+            }
         }
 
         public void Draw(SpriteBatch iSpriteBatch)
