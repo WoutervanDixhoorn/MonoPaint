@@ -61,15 +61,15 @@ namespace Input
             return false;
         }
 
-        public Point GetMousePosition()
+        public static Point GetMousePosition()
         {
             return currentMouseState.Position;
         }
-        public bool IsMouseMoved()
+        public static bool IsMouseMoved()
         {
             return currentMouseState.X != previousMouseState.X || currentMouseState.Y != previousMouseState.Y;
         }
-        public int GetMouseScroll()
+        public static int GetMouseScroll()
         {
             return currentMouseState.ScrollWheelValue - previousMouseState.ScrollWheelValue;
         }
