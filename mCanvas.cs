@@ -58,19 +58,34 @@ namespace MonoPaint
         }
 
         int zoom = 0;
+        bool leftClicked = false;
         public void Update()
         {
-            if(InputManger.IsPressed(MouseInput.LeftButton))
+            int mX = InputManger.CurrentMouseState.X;
+            int mY = InputManger.CurrentMouseState.Y;
+            
+            //Check AABB
+            foreach(aShape s in shapes)
             {
-                aShape s = shapes[1];
-
-                s.X = InputManger.CurrentMouseState.X - (s.Width / 2);
-                s.Y = InputManger.CurrentMouseState.Y  - (s.Height / 2);
+                if(InputManger.IsPressed(MouseInput.LeftButton))
+                {
+                    leftClicked = true;
+                }else if(leftClicked && InputManger.IsReleased(MouseInput.LeftButton))
+                {
+                    if(mX > s.X && mX <  s.X + s.Width &&
+                       mY > s.Y &&  mY < s.Y + s.Height)
+                    {
+                        s.Selected = !s.Selected;
+                    }else if(!InputManger.IsKeyDown(Keys.LeftShift)){
+                         s.Selected = false;
+                    }
+                }
             }
 
-            zoom += (InputManger.GetMouseScroll()) / 10;
+            if(InputManger.IsReleased(Input.MouseInput.LeftButton))
+                leftClicked = false;
 
-            Console.WriteLine("Zoom: " + zoom);
+            zoom += (InputManger.GetMouseScroll()) / 10;
         }
 
     private void DrawSceneToTexture(RenderTarget2D renderTarget, SpriteBatch iSpriteBatch)

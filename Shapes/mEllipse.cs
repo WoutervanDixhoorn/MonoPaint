@@ -60,11 +60,6 @@ namespace MonoPaint.Shapes
             shapeTexture.Dispose();
         }
 
-        public override void Draw(SpriteBatch spriteBatch, float iAlpha = 1)
-        {
-            spriteBatch.Draw(shapeTexture, position, Color.White * iAlpha);          
-        }
-
         public override string ToString()
         {
             return "[Ellipse]\n" + "Width: " + width + "\nHeight: " + height + "\nColor: " + color;

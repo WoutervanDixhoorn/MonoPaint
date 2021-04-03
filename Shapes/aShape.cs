@@ -11,6 +11,7 @@ namespace MonoPaint
         protected int width;
         protected int height;
         protected Vector2 position;
+        protected bool selected;
         protected Color color;
         protected Color[] shapeData;
 
@@ -38,10 +39,25 @@ namespace MonoPaint
             set { position.Y = value; }
         }
 
+        public bool Selected
+        {
+            get { return selected; }
+            set { selected = value; }
+        }
+
         public abstract void Load();
         public abstract void Reload();
         public abstract void Unload();
-        public abstract void Draw(SpriteBatch iSpriteBatch, float iAlpha = 1);
+        public void Draw(SpriteBatch iSpriteBatch, float iAlpha = 1)
+        {
+            if(selected)
+            {
+                iAlpha = 0.3f;
+                iSpriteBatch.Draw(shapeTexture, position, Color.White * iAlpha); 
+            }else{
+                iSpriteBatch.Draw(shapeTexture, position, Color.White * iAlpha); 
+            }
+        }
 
     }
 }
