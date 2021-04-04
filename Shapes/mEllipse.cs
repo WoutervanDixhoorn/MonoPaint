@@ -17,37 +17,18 @@ namespace MonoPaint.Shapes
 
         public override void Load()
         { 
-            int xRadius = width / 2;
-            int yRadius = height / 2;
-            
-            float radius = Math.Min(xRadius, yRadius);
-            float diameter = radius * 2;
-
-            float sharpness = 1.0f;  
-            
-            Matrix transform = Matrix.CreateScale(xRadius / radius, yRadius / radius, 1f);
-           
-            shapeTexture = new Texture2D(ContentHandler.Instance.Graphics, width, height, false, SurfaceFormat.Color);
+            shapeTexture = new Texture2D(ContentHandler.Instance.Graphics, width + 1, height + 1, false, SurfaceFormat.Color);
             shapeData = new Color[shapeTexture.Width * shapeTexture.Height];
-            Vector2 center = new Vector2(radius, radius);
-            for (int colIndex = 0; colIndex < shapeTexture.Width; colIndex++)
-            {
-                for (int rowIndex = 0; rowIndex < shapeTexture.Height; rowIndex++)
+
+            for(int x = 0; x < width; x++)
+            {    
+                for(int y = 0; y < height; y++)
                 {
-                    Vector2 position = new Vector2(colIndex, rowIndex);
-                    float distance = Vector2.Distance(center, position);
-
-                    // hermite iterpolation
-                    float x = distance / diameter;
-                    float edge0 = (radius * sharpness) / (float)diameter;
-                    float edge1 = radius / (float)diameter;
-                    float temp = MathHelper.Clamp((x - edge0) / (edge1 - edge0), 0.0f, 1.0f);
-                    float result = temp * temp * (3.0f - 2.0f * temp);
-
-                    shapeData[rowIndex * shapeTexture.Width + colIndex] = color * (1f - result);
-                }
+                    if(IsInEllipse(x, y))
+                        shapeData[y * shapeTexture.Width + x] = color; 
+                }   
             }
-            
+
             shapeTexture.SetData(shapeData);
         }
 
@@ -66,6 +47,18 @@ namespace MonoPaint.Shapes
         public override void Unload()
         {
             shapeTexture.Dispose();
+        }
+
+        bool IsInEllipse(int iX, int iY)
+        {
+            int xRadius = width / 2;
+            int yRadius = height / 2;
+
+            double resultLeft = (Math.Pow(iX - xRadius, 2) / (Math.Pow(xRadius, 2)));
+            double resultRight = (Math.Pow(iY - yRadius, 2) / (Math.Pow(yRadius, 2)));
+            double result = resultLeft + resultRight;
+
+            return result <= 1;
         }
 
         public override string ToString()
