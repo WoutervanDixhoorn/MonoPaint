@@ -16,30 +16,38 @@ namespace MonoPaint.Shapes
         }
 
         public override void Load()
-        {
-            shapeData = new Color[(width*height)];
+        { 
+            int xRadius = width / 2;
+            int yRadius = height / 2;
+            
+            float radius = Math.Min(xRadius, yRadius);
+            float diameter = radius * 2;
 
-            float diam = width / 2f;
-            float diamsq = diam * diam;
-
-            for (int x = 0; x < width; x++)
+            float sharpness = 1.0f;  
+            
+            Matrix transform = Matrix.CreateScale(xRadius / radius, yRadius / radius, 1f);
+           
+            shapeTexture = new Texture2D(ContentHandler.Instance.Graphics, width, height, false, SurfaceFormat.Color);
+            shapeData = new Color[shapeTexture.Width * shapeTexture.Height];
+            Vector2 center = new Vector2(radius, radius);
+            for (int colIndex = 0; colIndex < shapeTexture.Width; colIndex++)
             {
-                for (int y = 0; y < width; y++)
+                for (int rowIndex = 0; rowIndex < shapeTexture.Height; rowIndex++)
                 {
-                    int index = x * width + y;
-                    Vector2 pos = new Vector2(x - diam, y - diam);
-                    if (pos.LengthSquared() <= diamsq)
-                    {
-                        shapeData[index] = Color.White;
-                    }
-                    else
-                    {
-                        shapeData[index] = Color.Transparent;
-                    }
+                    Vector2 position = new Vector2(colIndex, rowIndex);
+                    float distance = Vector2.Distance(center, position);
+
+                    // hermite iterpolation
+                    float x = distance / diameter;
+                    float edge0 = (radius * sharpness) / (float)diameter;
+                    float edge1 = radius / (float)diameter;
+                    float temp = MathHelper.Clamp((x - edge0) / (edge1 - edge0), 0.0f, 1.0f);
+                    float result = temp * temp * (3.0f - 2.0f * temp);
+
+                    shapeData[rowIndex * shapeTexture.Width + colIndex] = color * (1f - result);
                 }
             }
-
-            shapeTexture = new Texture2D(ContentHandler.Instance.Graphics, width, height); 
+            
             shapeTexture.SetData(shapeData);
         }
 

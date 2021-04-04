@@ -5,6 +5,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using MonoGame;
+
 using Input;
 using MonoPaint.Shapes;
 
@@ -112,7 +114,6 @@ namespace MonoPaint
             iSpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend,
             SamplerState.LinearClamp, DepthStencilState.Default,
             RasterizerState.CullNone);
-            
 
             DrawSceneToTexture(renderTarget, iSpriteBatch);
             iSpriteBatch.Draw(renderTarget, new Rectangle(10, 10, 780, 460), Color.White);
