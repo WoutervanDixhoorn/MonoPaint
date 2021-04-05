@@ -5,30 +5,34 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-using MonoGame;
-
 using Input;
 using MonoPaint.Shapes;
-
 
 namespace MonoPaint
 {
     public class mCanvas
     {   
         RenderTarget2D renderTarget;
-
         List<aShape> shapes;
 
-        public mCanvas()
+        bool resizePending;
+
+        int width, height;
+
+        public int Width{ private set{ width = value; } get{ return width; }}
+        public int Height{ private set{ height = value; } get{ return height; }}
+
+        public mCanvas(int iWidth, int iHeight)
         {
             shapes = new List<aShape>();
-            
-            aShape Ellps1 = new mEllipse(100, 150, Color.HotPink);
-            Ellps1.X = 50; Ellps1.Y = 50;
-            shapes.Add(Ellps1);
 
-            aShape Rect1 = new mRectangle(75, 100, Color.BurlyWood);
-            Rect1.X = 450; Rect1.Y = 200;
+            resizePending = false;
+
+            width = iWidth;
+            height = iHeight;
+
+            mRectangle Rect1 = new mRectangle(100, 150, Color.Blue);
+            Rect1.X = 50; Rect1.Y = 50;
             shapes.Add(Rect1);
 
             Console.WriteLine("Initialized canvas with: " + shapes.Count + " shapes");
@@ -37,6 +41,7 @@ namespace MonoPaint
         public void Load()
         {
             GraphicsDevice gd = ContentHandler.Instance.Graphics;
+
             renderTarget = new RenderTarget2D(
                 gd,
                 gd.PresentationParameters.BackBufferWidth,
@@ -90,36 +95,61 @@ namespace MonoPaint
             zoom += (InputManger.GetMouseScroll()) / 10;
         }
 
-    private void DrawSceneToTexture(RenderTarget2D renderTarget, SpriteBatch iSpriteBatch)
-    {
-        GraphicsDevice gd = ContentHandler.Instance.Graphics;
-        // Set the render target
-        gd.SetRenderTarget(renderTarget);
-    
-        gd.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
-    
-        // Draw the scene
-        gd.Clear(Color.CornflowerBlue);
-        foreach(aShape shape in shapes)
+        private void DrawSceneToTexture(RenderTarget2D renderTarget, SpriteBatch iSpriteBatch)
         {
-            shape.Draw(iSpriteBatch);
+            GraphicsDevice gd = ContentHandler.Instance.Graphics;
+           
+            if(resizePending)
+            {
+                RenderTarget2D newTarget = new RenderTarget2D(
+                gd,
+                gd.PresentationParameters.BackBufferWidth,
+                gd.PresentationParameters.BackBufferHeight,
+                false,
+                gd.PresentationParameters.BackBufferFormat,
+                DepthFormat.Depth24);
+
+                gd.SetRenderTarget(newTarget);
+
+                gd.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
+                
+                iSpriteBatch.End();
+
+                iSpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend,
+                SamplerState.LinearClamp, DepthStencilState.Default,
+                RasterizerState.CullNone);
+                iSpriteBatch.Draw(renderTarget, new Vector2(0,0), Color.White);
+                iSpriteBatch.End();
+
+                iSpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend,
+                SamplerState.LinearClamp, DepthStencilState.Default,
+                RasterizerState.CullNone);
+            }else{
+                gd.SetRenderTarget(renderTarget);
+                
+                gd.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
+        
+                 // Draw the scene
+                gd.Clear(Color.White);
+                foreach(aShape shape in shapes)
+                {
+                    shape.Draw(iSpriteBatch);
+                }
+            }
+        
+            gd.SetRenderTarget(null);
         }
-    
-        // Drop the render target
-        gd.SetRenderTarget(null);
-    }
 
         public void Draw(SpriteBatch iSpriteBatch)
         {
-            iSpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend,
-            SamplerState.LinearClamp, DepthStencilState.Default,
-            RasterizerState.CullNone);
-
             DrawSceneToTexture(renderTarget, iSpriteBatch);
-            iSpriteBatch.Draw(renderTarget, new Rectangle(10, 10, 780, 460), Color.White);
-
-            iSpriteBatch.End();
+            iSpriteBatch.Draw(renderTarget, new Rectangle(0, 0, width, height), Color.White);
         }
 
+        public void Resize()
+        {
+            resizePending = true;        
+        }
     }
+
 }

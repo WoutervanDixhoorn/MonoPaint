@@ -25,7 +25,11 @@ namespace MonoPaint.Shapes
                 for(int y = 0; y < height; y++)
                 {
                     if(IsInEllipse(x, y))
+                    {
                         shapeData[y * shapeTexture.Width + x] = color; 
+                    }else{
+                        shapeData[y * shapeTexture.Width + x] = Color.Transparent;
+                    }
                 }   
             }
 

@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -20,14 +21,16 @@ namespace MonoPaint
 
         public ContentManager Content{private set; get;}
         public GraphicsDevice Graphics{private set; get;}
+        public GraphicsDeviceManager GraphicsManager{private set; get;}
 
         public ContentHandler(){
 
         }
 
-        public void Load(ContentManager iContent, GraphicsDevice iGraphics){
+        public void Load(ContentManager iContent, GraphicsDevice iGraphics, GraphicsDeviceManager iGraphicsManager){
             this.Content = new ContentManager(iContent.ServiceProvider, "Content");
             this.Graphics = iGraphics;
+            this.GraphicsManager = iGraphicsManager;
         }
 
     }

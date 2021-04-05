@@ -30,13 +30,13 @@ namespace MonoPaint
         public int X
         {
             get { return (int)position.X; }
-            set { position.X = value; }
+            set { position.X = value + width; }
         }
 
         public int Y
         {
             get { return (int)position.Y; }
-            set { position.Y = value; }
+            set { position.Y = value + height; }
         }
 
         public bool Selected
@@ -51,12 +51,9 @@ namespace MonoPaint
         public void Draw(SpriteBatch iSpriteBatch, float iAlpha = 1)
         {
             if(selected)
-            {
-                iAlpha = 0.3f;
-                iSpriteBatch.Draw(shapeTexture, position, Color.White * iAlpha); 
-            }else{
-                iSpriteBatch.Draw(shapeTexture, position, Color.White * iAlpha); 
-            }
+                iAlpha = 0.8f;
+
+            iSpriteBatch.Draw(shapeTexture, position, Color.White * iAlpha); 
         }
 
     }
