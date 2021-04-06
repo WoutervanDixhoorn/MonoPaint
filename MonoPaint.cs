@@ -23,18 +23,16 @@ namespace MonoPaint
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            Window.AllowUserResizing = true; 
-
-            Window.ClientSizeChanged += new EventHandler<EventArgs>(WindowResize);
-
-            graphics.PreferredBackBufferWidth = 800;
-            graphics.PreferredBackBufferHeight = 480;
-
-            graphics.ApplyChanges();
+            Window.AllowUserResizing = false; 
         }
 
         protected override void Initialize()
         {
+            ContentHandler.Instance.Load(Content, GraphicsDevice, graphics);
+            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = 720;
+            graphics.ApplyChanges();
+
             monoPlayground = new mPlayground();
 
             base.Initialize();
@@ -43,8 +41,7 @@ namespace MonoPaint
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            ContentHandler.Instance.Load(Content, GraphicsDevice, graphics);
-
+            
             monoPlayground.Load();
         }
 
@@ -59,24 +56,9 @@ namespace MonoPaint
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
             monoPlayground.Draw(spriteBatch);
 
             base.Draw(gameTime);
-        }
-
-        void WindowResize(object sender, EventArgs e)
-        {
-            int nWidth = Window.ClientBounds.Width, nHeight = Window.ClientBounds.Height;
-
-            graphics.PreferredBackBufferWidth = nWidth;
-            graphics.PreferredBackBufferHeight = nHeight;
-            graphics.ApplyChanges();
-
-            monoPlayground.Resize();
-
-            Console.WriteLine("[Resize] Width: " + nWidth + " Height: " + nHeight);
         }
     }
 }

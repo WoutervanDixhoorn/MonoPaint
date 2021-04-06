@@ -50,7 +50,8 @@ namespace MonoPaint.Shapes
         }
         public override void Unload()
         {
-            shapeTexture.Dispose();
+            if(shapeTexture != null)
+                shapeTexture.Dispose();
         }
 
         bool IsInEllipse(int iX, int iY)

@@ -12,26 +12,26 @@ namespace MonoPaint
 {
     public class mCanvas
     {   
-        RenderTarget2D renderTarget;
         List<aShape> shapes;
 
-        bool resizePending;
+        public List<aShape> Shapes{ get{ return shapes; } }
 
         int width, height;
 
         public int Width{ private set{ width = value; } get{ return width; }}
         public int Height{ private set{ height = value; } get{ return height; }}
 
+
+        mRectangle Rect1;
         public mCanvas(int iWidth, int iHeight)
         {
             shapes = new List<aShape>();
 
-            resizePending = false;
-
             width = iWidth;
             height = iHeight;
 
-            mRectangle Rect1 = new mRectangle(100, 150, Color.Blue);
+            //TODO: Make function to draw rectangles
+            Rect1 = new mRectangle(100, 150, Color.Blue);
             Rect1.X = 50; Rect1.Y = 50;
             shapes.Add(Rect1);
 
@@ -40,16 +40,6 @@ namespace MonoPaint
 
         public void Load()
         {
-            GraphicsDevice gd = ContentHandler.Instance.Graphics;
-
-            renderTarget = new RenderTarget2D(
-                gd,
-                gd.PresentationParameters.BackBufferWidth,
-                gd.PresentationParameters.BackBufferHeight,
-                false,
-                gd.PresentationParameters.BackBufferFormat,
-                DepthFormat.Depth24);
-
             foreach(aShape shape in shapes)
             {
                 shape.Load();
@@ -64,14 +54,13 @@ namespace MonoPaint
             }
         }
 
-        int zoom = 0;
         bool leftClicked = false;
         public void Update()
         {
+            /* TODO: Move AABB checking to shape and make class that handles shape drawing etc.
             int mX = InputManger.CurrentMouseState.X;
             int mY = InputManger.CurrentMouseState.Y;
             
-            //Check AABB
             foreach(aShape s in shapes)
             {
                 if(InputManger.IsPressed(MouseInput.LeftButton))
@@ -91,64 +80,23 @@ namespace MonoPaint
 
             if(InputManger.IsReleased(Input.MouseInput.LeftButton))
                 leftClicked = false;
+            */
 
-            zoom += (InputManger.GetMouseScroll()) / 10;
-        }
-
-        private void DrawSceneToTexture(RenderTarget2D renderTarget, SpriteBatch iSpriteBatch)
-        {
-            GraphicsDevice gd = ContentHandler.Instance.Graphics;
-           
-            if(resizePending)
+            if(InputManger.IsKeyDown(Keys.Up))
             {
-                RenderTarget2D newTarget = new RenderTarget2D(
-                gd,
-                gd.PresentationParameters.BackBufferWidth,
-                gd.PresentationParameters.BackBufferHeight,
-                false,
-                gd.PresentationParameters.BackBufferFormat,
-                DepthFormat.Depth24);
-
-                gd.SetRenderTarget(newTarget);
-
-                gd.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
-                
-                iSpriteBatch.End();
-
-                iSpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend,
-                SamplerState.LinearClamp, DepthStencilState.Default,
-                RasterizerState.CullNone);
-                iSpriteBatch.Draw(renderTarget, new Vector2(0,0), Color.White);
-                iSpriteBatch.End();
-
-                iSpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend,
-                SamplerState.LinearClamp, DepthStencilState.Default,
-                RasterizerState.CullNone);
-            }else{
-                gd.SetRenderTarget(renderTarget);
-                
-                gd.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
-        
-                 // Draw the scene
-                gd.Clear(Color.White);
-                foreach(aShape shape in shapes)
-                {
-                    shape.Draw(iSpriteBatch);
-                }
+                Rect1.Height += 2;
+            }else if(InputManger.IsKeyDown(Keys.Down))
+            {
+                Rect1.Height -= 2;
             }
-        
-            gd.SetRenderTarget(null);
         }
 
         public void Draw(SpriteBatch iSpriteBatch)
         {
-            DrawSceneToTexture(renderTarget, iSpriteBatch);
-            iSpriteBatch.Draw(renderTarget, new Rectangle(0, 0, width, height), Color.White);
-        }
-
-        public void Resize()
-        {
-            resizePending = true;        
+            foreach(aShape shape in shapes)
+            {
+                shape.Draw(iSpriteBatch);
+            }
         }
     }
 

@@ -50,6 +50,11 @@ namespace MonoPaint
         public abstract void Unload();
         public void Draw(SpriteBatch iSpriteBatch, float iAlpha = 1)
         {
+            if(shapeTexture == null)
+            {
+                throw new System.NullReferenceException("shapeTexture is null");
+            }
+
             if(selected)
                 iAlpha = 0.8f;
 
