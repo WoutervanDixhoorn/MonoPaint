@@ -38,6 +38,7 @@ namespace MonoPaint.Graphics
             }
 
             ContentHandler.Instance.Graphics.SetRenderTarget(screenTarget);
+            ContentHandler.Instance.Graphics.Clear(Color.White);
         }
 
         public void Unset()
@@ -52,12 +53,12 @@ namespace MonoPaint.Graphics
 
         public void Present(SpriteBatch iSpriteBatch)
         {      
-            ContentHandler.Instance.Graphics.Clear(Color.HotPink);
+            ContentHandler.Instance.Graphics.Clear(Color.Black);
                   
             iSpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend,
             SamplerState.LinearClamp, DepthStencilState.Default,
             RasterizerState.CullNone);
-
+            
             iSpriteBatch.Draw(screenTarget, new Rectangle(0,0, width, height), Color.White);
 
             iSpriteBatch.End();
