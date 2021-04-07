@@ -29,6 +29,14 @@ namespace MonoPaint
             Console.WriteLine("Initialized canvas with: " + shapes.Count + " shapes");
         }
 
+        public void ForAllShapes(Action<aShape> iShapeFunction)
+        {
+            foreach(aShape shape in Shapes)
+            {
+                iShapeFunction(shape);
+            }
+        }
+
         public void Load()
         {
             foreach(aShape shape in shapes)

@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -12,6 +13,7 @@ namespace MonoPaint
         protected int height;
         protected Vector2 position;
         protected bool selected;
+        protected bool hovered;
         protected Color color;
         protected Color[] shapeData;
 
@@ -44,6 +46,26 @@ namespace MonoPaint
             get { return selected; }
             set { selected = value; }
         }
+
+        public bool Hovered
+        {
+            get { return hovered; }
+            set { hovered = value; }
+        }
+
+        public aShape(int iWidth, int iHeight, Color? iColor = null)
+        {
+            if(iWidth <= 0 || iHeight <= 0)
+            {
+                throw new NotSupportedException("Cant draw shapes with a width or height lower then 1 yet");
+            }
+
+            width = iWidth;
+            height = iHeight;
+            position = new Vector2(0, 0);
+            color = iColor ?? Color.HotPink;
+        }
+        
         public abstract bool Contains(int iX, int iY);
         public abstract void Load();
         public abstract void Reload();
@@ -55,8 +77,8 @@ namespace MonoPaint
                 throw new System.NullReferenceException("shapeTexture is null");
             }
 
-            if(selected)
-                iAlpha = 0.8f;
+            if(hovered || selected)
+                iAlpha = 0.5f;
 
             iSpriteBatch.Draw(shapeTexture, position, Color.White * iAlpha); 
         }

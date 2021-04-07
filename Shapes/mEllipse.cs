@@ -7,12 +7,9 @@ namespace MonoPaint.Shapes
 {
     public class mEllipse : aShape
     {
-        public mEllipse(int iWidth, int iHeight, Color? iColor = null)
+        public mEllipse(int iWidth, int iHeight, Color? iColor = null) : 
+        base(iWidth, iHeight, iColor)
         {
-            width = iWidth;
-            height = iHeight;
-            position = new Vector2(0, 0);
-            color = iColor ?? Color.HotPink;
         }
 
         public override void Load()

@@ -7,17 +7,9 @@ namespace MonoPaint
 {
     public class mRectangle : aShape
     {
-        public mRectangle(int iWidth, int iHeight, Color? iColor = null)
+        public mRectangle(int iWidth, int iHeight, Color? iColor = null) : 
+        base(iWidth, iHeight, iColor)
         {
-            if(iWidth <= 0 || iHeight <= 0)
-            {
-                throw new NotSupportedException("Cant draw shapes with a width or height lower then 1 yet");
-            }
-
-            width = iWidth;
-            height = iHeight;
-            position = new Vector2(0, 0);
-            color = iColor ?? Color.HotPink;
         }
 
         public override bool Contains(int iX, int iY)

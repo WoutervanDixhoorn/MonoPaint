@@ -13,7 +13,7 @@ namespace MonoPaint
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
 
-        Vector2 baseScreenSize = new Vector2(800, 480);
+        Vector2 baseScreenSize = new Vector2(1280, 720);
 
         //PaintVars
         mPlayground monoPlayground;
@@ -29,8 +29,8 @@ namespace MonoPaint
         protected override void Initialize()
         {
             ContentHandler.Instance.Load(Content, GraphicsDevice, graphics);
-            graphics.PreferredBackBufferWidth = 1280;
-            graphics.PreferredBackBufferHeight = 720;
+            graphics.PreferredBackBufferWidth = (int)baseScreenSize.X;
+            graphics.PreferredBackBufferHeight = (int)baseScreenSize.Y;
             graphics.ApplyChanges();
 
             monoPlayground = new mPlayground();

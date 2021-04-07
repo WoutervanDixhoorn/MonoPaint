@@ -38,7 +38,7 @@ namespace MonoPaint.Shapes
         public void UpdateInput()
         {     
             
-                
+            //TODO: Move to playgound where you can select other tools aswell
             if(InputManger.IsKeyPressed(Keys.Q))
             {
                 if(curShape == eShape.Rect)
