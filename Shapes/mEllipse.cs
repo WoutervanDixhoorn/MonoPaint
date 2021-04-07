@@ -36,6 +36,20 @@ namespace MonoPaint.Shapes
             shapeTexture.SetData(shapeData);
         }
 
+        public override bool Contains(int iX, int iY)
+        {
+            if(iX > X && iX <  X + Width &&
+               iY > Y &&  iY < Y + Height)
+            {
+                //TODO: Normalize iX and iY and check ellipse 
+                int normX = iX - X;
+                int normY = iY - Y;
+                if(IsInEllipse(normX, normY))
+                    return true;
+            }
+            return false;
+        }
+
         public override void Reload()
         {
             Unload();

@@ -19,7 +19,17 @@ namespace MonoPaint
             position = new Vector2(0, 0);
             color = iColor ?? Color.HotPink;
         }
-        
+
+        public override bool Contains(int iX, int iY)
+        {
+            if(iX > X && iX <  X + Width &&
+               iY > Y &&  iY < Y + Height)
+            {
+                return true;
+            }
+            return false;
+        }
+
         public override void Load()
         {
             shapeData = new Color[(width*height)];

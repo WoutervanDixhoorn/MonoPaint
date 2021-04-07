@@ -18,13 +18,13 @@ namespace MonoPaint
         public int Width
         {
             get { return width; }
-            set { width = value; Reload(); }
+            set { width = value; }
         }
 
         public int Height
         {
             get { return height; }
-            set { height = value; Reload(); }
+            set { height = value; }
         }
 
         public int X
@@ -44,7 +44,7 @@ namespace MonoPaint
             get { return selected; }
             set { selected = value; }
         }
-
+        public abstract bool Contains(int iX, int iY);
         public abstract void Load();
         public abstract void Reload();
         public abstract void Unload();
