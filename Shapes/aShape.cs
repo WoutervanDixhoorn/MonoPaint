@@ -9,13 +9,18 @@ namespace MonoPaint
     {
         //TODO: Create a base constructor that can be called from any class implementing 'aShape'
         protected Texture2D shapeTexture;
+        protected Texture2D borderTexture;
         protected int width;
         protected int height;
+        protected int borderSize;
         protected Vector2 position;
         protected bool selected;
         protected bool hovered;
+        protected bool drawBorder;
         protected Color color;
         protected Color[] shapeData;
+        protected Color borderColor;
+        protected Color[] borderData;
 
         public int Width
         {
@@ -53,6 +58,12 @@ namespace MonoPaint
             set { hovered = value; }
         }
 
+        public bool DrawBorder
+        {
+            get { return drawBorder; }
+            set { drawBorder = value; }
+        }
+
         public aShape(int iWidth, int iHeight, Color? iColor = null)
         {
             if(iWidth <= 0 || iHeight <= 0)
@@ -62,13 +73,15 @@ namespace MonoPaint
 
             width = iWidth;
             height = iHeight;
+            borderSize = 3;
+            drawBorder = false;
             position = new Vector2(0, 0);
             color = iColor ?? Color.HotPink;
+            borderColor = Color.Black;
         }
         
         public abstract bool Contains(int iX, int iY);
         public abstract void Load();
-        public abstract void Reload();
         public abstract void Unload();
         public void Draw(SpriteBatch iSpriteBatch, float iAlpha = 1)
         {
@@ -81,6 +94,12 @@ namespace MonoPaint
                 iAlpha = 0.5f;
 
             iSpriteBatch.Draw(shapeTexture, position, Color.White * iAlpha); 
+            if(drawBorder){
+                if(borderTexture == null)
+                    Load();
+                iSpriteBatch.Draw(borderTexture, position - new Vector2(borderSize), Color.White * iAlpha); 
+            }
+               
         }
 
     }

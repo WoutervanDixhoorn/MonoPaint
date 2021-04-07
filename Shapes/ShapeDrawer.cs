@@ -36,8 +36,7 @@ namespace MonoPaint.Shapes
         int xPos1, yPos1, xPos2, yPos2 = 0;
         int rWidth, rHeight;
         public void UpdateInput()
-        {     
-            
+        {        
             //TODO: Move to playgound where you can select other tools aswell
             if(InputManger.IsKeyPressed(Keys.Q))
             {
@@ -89,7 +88,6 @@ namespace MonoPaint.Shapes
 
                 currentShape.Load();
             }
-
         }
 
     }

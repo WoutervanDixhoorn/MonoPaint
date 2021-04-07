@@ -31,14 +31,29 @@ namespace MonoPaint
 
             shapeTexture = new Texture2D(ContentHandler.Instance.Graphics, width, height); 
             shapeTexture.SetData(shapeData);
+
+            //Load border
+            if(drawBorder){
+                int borderWidth = width+(borderSize*2), borderHeight = height+(borderSize*2);
+                borderData = new Color[((borderWidth)*(borderHeight))];
+
+                for(int i = 0; i < borderHeight; i++){
+                    for(int j = 0; j < borderWidth; j++){
+                        if(j >= i*borderWidth - borderSize || j <= borderSize){
+                            borderData[i*borderWidth+j] = borderColor;
+                        }else if(j >= borderWidth - borderSize){
+                            borderData[i*borderWidth+j] = borderColor;
+                        }else if(i >= borderHeight - borderSize || i <= borderSize){
+                            borderData[i*borderWidth+j] = borderColor;
+                        }                 
+                    }
+                }
+                
+                borderTexture = new Texture2D(ContentHandler.Instance.Graphics, borderWidth, borderHeight); 
+                borderTexture.SetData(borderData);
+            }
         }
 
-        public override void Reload()
-        {
-            Unload();
-
-            Load();
-        }
         public override void Unload()
         {
             shapeData = null;

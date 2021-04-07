@@ -17,7 +17,7 @@ namespace MonoPaint
 
         ShapeDrawer shapeDrawer;
 
-        int width = 640, height = 480;//TODO: Dont hard code width and height here
+        int width = 1280, height = 720;//TODO: Dont hard code width and height here
 
         public int Width {
             get { return width; }
@@ -114,6 +114,17 @@ namespace MonoPaint
                     currentTool = Tool.SelectTool;
                 else if(currentTool == Tool.SelectTool)
                     currentTool = Tool.DrawTool;
+            }
+
+            if(InputManger.IsKeyPressed(Keys.B))
+            {
+                foreach(mCanvas c in layers)
+                {
+                    c.ForAllShapes((aShape shape) => {
+                        if(shape.Selected)
+                            shape.DrawBorder = !shape.DrawBorder;
+                    });
+                }
             }
 
             if(currentTool == Tool.DrawTool)
