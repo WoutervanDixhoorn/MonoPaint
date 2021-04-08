@@ -8,6 +8,8 @@ using Microsoft.Xna.Framework.Input;
 using Input;
 using MonoPaint.Shapes;
 using MonoPaint.Graphics;
+using MonoPaint.ToolStrategy;
+
 namespace MonoPaint
 {
     public class mPlayground
@@ -15,9 +17,14 @@ namespace MonoPaint
         Screen screen;
         List<mCanvas> layers;
 
-        ShapeDrawer shapeDrawer;
+        IShapeTool shapeTool;
 
         int width = 1280, height = 720;//TODO: Dont hard code width and height here
+
+        public List<mCanvas> Canvases
+        {
+            get { return layers; }
+        }
 
         public int Width {
             get { return width; }
@@ -45,7 +52,7 @@ namespace MonoPaint
 
             currentTool = Tool.DrawTool;
 
-            shapeDrawer = new ShapeDrawer(this);
+            shapeTool = new ShapeDrawTool(this);
             
             tempFont = ContentHandler.Instance.Content.Load<SpriteFont>("TempFont");
         }
@@ -101,7 +108,7 @@ namespace MonoPaint
 
             //Draw temp tool view
             iSpriteBatch.Begin();
-            iSpriteBatch.DrawString(tempFont, "Current Tool: " + currentTool.GetDescription(), new Vector2(1000, 700), Color.White);
+            iSpriteBatch.DrawString(tempFont, "Current Tool: " + currentTool.GetDescription(), new Vector2(1000, 700), Color.Black);
             iSpriteBatch.End();
         }
 
@@ -110,62 +117,17 @@ namespace MonoPaint
         {
             if(InputManger.IsKeyPressed(Keys.Space))
             {
-                if(currentTool == Tool.DrawTool)
+                if(currentTool == Tool.DrawTool){
                     currentTool = Tool.SelectTool;
-                else if(currentTool == Tool.SelectTool)
+                    shapeTool = new ShapeSelectTool(this);
+                }
+                else if(currentTool == Tool.SelectTool){
                     currentTool = Tool.DrawTool;
-            }
-
-            if(InputManger.IsKeyPressed(Keys.B))
-            {
-                foreach(mCanvas c in layers)
-                {
-                    c.ForAllShapes((aShape shape) => {
-                        if(shape.Selected)
-                            shape.DrawBorder = !shape.DrawBorder;
-                    });
+                    shapeTool = new ShapeDrawTool(this);
                 }
             }
 
-            if(currentTool == Tool.DrawTool)
-                shapeDrawer.UpdateInput(); 
-            else if(currentTool == Tool.SelectTool)
-            {
-                foreach(mCanvas c in layers)
-                {
-                    c.ForAllShapes(SelectShape);
-                }
-            }
-            
-            if(InputManger.IsPressed(MouseInput.LeftButton))
-                leftClicked = true;
-
-            if(InputManger.IsReleased(Input.MouseInput.LeftButton))
-                leftClicked = false;
+            shapeTool.Update(); 
         }
-
-        void SelectShape(aShape iShape)
-        {          
-            int x = InputManger.CurrentMouseState.X;
-            int y = InputManger.CurrentMouseState.Y;
-
-            if(iShape.Contains(x, y))
-            {
-                iShape.Hovered = true;
-            }else{
-                iShape.Hovered = false;
-            }
-
-            if(leftClicked && InputManger.IsReleased(MouseInput.LeftButton))
-            {
-                if(iShape.Hovered)
-                {
-                    iShape.Selected = !iShape.Selected;
-                }else if(!InputManger.IsKeyDown(Keys.LeftShift)){
-                    iShape.Selected = false;
-                }
-            }
-        }
-
     }
 }
