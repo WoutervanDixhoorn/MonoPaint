@@ -75,6 +75,13 @@ namespace MonoPaint.ToolStrategy
         {
             if(transformingShape != null)
                 transformingShape.Transforming = false;
+
+            foreach(mCanvas c in playground.Canvases)
+            {
+                c.ForAllShapes((aShape shape) => {
+                    shape.Selected = false;
+                });
+            }
         }
 
         void ToggleHover()
