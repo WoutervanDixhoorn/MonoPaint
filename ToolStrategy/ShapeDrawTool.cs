@@ -62,7 +62,7 @@ namespace MonoPaint.ToolStrategy
                 yPos1 = InputManger.CurrentMouseState.Y;
 
                 currentShape.X = xPos1; currentShape.Y = yPos1;
-                currentShape.Load();
+                currentShape.LoadWhileDrawing();
 
                 drawing = true;
 
@@ -89,7 +89,7 @@ namespace MonoPaint.ToolStrategy
                 currentShape.Width = Util.Clamp(rWidth, 1, playground.Width);
                 currentShape.Height = Util.Clamp(rHeight, 1, playground.Height);
 
-                currentShape.Load();
+                currentShape.LoadWhileDrawing();
             }
 
             if(InputManger.IsPressed(MouseInput.LeftButton))

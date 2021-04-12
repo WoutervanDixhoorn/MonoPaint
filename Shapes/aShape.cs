@@ -131,6 +131,7 @@ namespace MonoPaint
 
         public abstract bool Contains(int iX, int iY);
         public abstract void Load();
+        public abstract void LoadWhileDrawing(); //NOTE: This is temp code for drawing faster ellipse
         public abstract void Unload();
         public void Draw(SpriteBatch iSpriteBatch, float iAlpha = 1)
         {

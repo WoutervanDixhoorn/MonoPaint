@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 using Input;
 using MonoPaint.Shapes;
+using MonoPaint.Commands;
 using MonoPaint.Graphics;
 using MonoPaint.ToolStrategy;
 
@@ -16,6 +17,8 @@ namespace MonoPaint
     {
         Screen screen;
         List<mCanvas> layers;
+
+        CommandHandler commandHandler;
 
         IShapeTool shapeTool;
 
@@ -51,6 +54,8 @@ namespace MonoPaint
             layers = new List<mCanvas>();
             layers.Add(new mCanvas(width, height));
 
+            commandHandler = new CommandHandler();
+
             currentTool = Tool.DrawTool;
 
             shapeTool = new ShapeDrawTool(this);
@@ -61,6 +66,11 @@ namespace MonoPaint
         public void AddShape(aShape shape)
         {
             layers[0].Shapes.Add(shape);//TODO: Add to selected layer
+        }
+
+        public void RemoveShape(aShape shape)
+        {
+            layers[0].Shapes.Remove(shape);
         }
 
         public void Load()
@@ -102,20 +112,28 @@ namespace MonoPaint
                 c.Draw(iSpriteBatch);
             }
 
+            shapeTool.Draw(iSpriteBatch);
+
             iSpriteBatch.End();
 
             screen.Unset();
             screen.Present(iSpriteBatch);
 
+            /*Move to UI*/
             //Draw temp tool view
             iSpriteBatch.Begin();
             iSpriteBatch.DrawString(tempFont, "Current Tool: " + currentTool.GetDescription(), new Vector2(1000, 700), Color.Black);
             iSpriteBatch.End();
         }
 
-        bool leftClicked = false;
+        public void ExecuteCommand(ICommand iCommand)
+        {
+            commandHandler.Execute(iCommand);
+        }
+
         void UpdateInput()
         {
+            /*TODO: Move to UI*/
             if(InputManger.IsKeyPressed(Keys.Space))
             {
                 shapeTool.Reset();
@@ -131,6 +149,11 @@ namespace MonoPaint
                     currentTool = Tool.DrawTool;
                     shapeTool = new ShapeDrawTool(this);
                 }
+            }
+
+            if(InputManger.IsKeyReleased(Keys.Z))
+            {
+                commandHandler.Undo();
             }
 
             shapeTool.Update(); 

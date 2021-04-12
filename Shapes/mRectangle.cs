@@ -24,12 +24,12 @@ namespace MonoPaint
 
         public override void Load()
         {
-            shapeData = new Color[(width*height)];
+            shapeTexture = new Texture2D(ContentHandler.Instance.Graphics, width, height); 
+            shapeData = new Color[(shapeTexture.Width * shapeTexture.Height)];
 
             for(int i = 0; i < shapeData.Length; i++)
                 shapeData[i] = color;
 
-            shapeTexture = new Texture2D(ContentHandler.Instance.Graphics, width, height); 
             shapeTexture.SetData(shapeData);
 
             //Load border
@@ -57,6 +57,26 @@ namespace MonoPaint
             {
                 generateTransformRect();
             }
+        }
+
+        public override void LoadWhileDrawing()
+        {
+            shapeTexture = new Texture2D(ContentHandler.Instance.Graphics, width, height); 
+            shapeData = new Color[(shapeTexture.Width * shapeTexture.Height)];
+
+            for(int i = 0; i < height; i++){
+                for(int j = 0; j < width; j++){
+                    if(j >= i*width - 1 || j < 1){
+                        shapeData[i*width+j] = borderColor;
+                    }else if(j >= width - 1){
+                        shapeData[i*width+j] = borderColor;
+                    }else if(i >= height - 1 || i < 1){
+                        shapeData[i*width+j] = borderColor;
+                    }                 
+                }
+            }
+
+            shapeTexture.SetData(shapeData);
         }
 
         public override void Unload()
