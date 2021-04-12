@@ -73,7 +73,8 @@ namespace MonoPaint.ToolStrategy
 
         public void Reset()
         {
-            transformingShape.Transforming = false;
+            if(transformingShape != null)
+                transformingShape.Transforming = false;
         }
 
         void ToggleHover()
