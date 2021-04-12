@@ -55,7 +55,6 @@ namespace MonoPaint.ToolStrategy
 
                 xPos1 = InputManger.CurrentMouseState.X;
                 yPos1 = InputManger.CurrentMouseState.Y;
-                leftClicked = true;
 
                 currentShape.X = xPos1; currentShape.Y = yPos1;
                 currentShape.Load();
@@ -65,8 +64,6 @@ namespace MonoPaint.ToolStrategy
                 Console.WriteLine("Start drawing at: [" + xPos1 + " | " + yPos1 + "]");
             }else if(leftClicked && InputManger.IsReleased(MouseInput.LeftButton))
             {
-                leftClicked = false;
-
                 currentShape.Width = Util.Clamp(rWidth, 1, playground.Width);
                 currentShape.Height = Util.Clamp(rHeight, 1, playground.Height);
 
@@ -85,6 +82,17 @@ namespace MonoPaint.ToolStrategy
 
                 currentShape.Load();
             }
+
+            if(InputManger.IsPressed(MouseInput.LeftButton))
+                leftClicked = true;
+
+            if(InputManger.IsReleased(Input.MouseInput.LeftButton))
+                leftClicked = false;
+        }
+
+        public void Reset()
+        {
+            /*Reset shapes if needed*/
         }
 
     }

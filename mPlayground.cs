@@ -39,6 +39,7 @@ namespace MonoPaint
         enum Tool{
             [Description("Drawing")]DrawTool,
             [Description("Selecting")]SelectTool,
+            [Description("Transform")]TransformTool
         }
 
         Tool currentTool;
@@ -117,11 +118,16 @@ namespace MonoPaint
         {
             if(InputManger.IsKeyPressed(Keys.Space))
             {
+                shapeTool.Reset();
                 if(currentTool == Tool.DrawTool){
                     currentTool = Tool.SelectTool;
                     shapeTool = new ShapeSelectTool(this);
                 }
                 else if(currentTool == Tool.SelectTool){
+                    currentTool = Tool.TransformTool;
+                    shapeTool = new ShapeTransformTool(this);
+                }else if(currentTool == Tool.TransformTool)
+                {
                     currentTool = Tool.DrawTool;
                     shapeTool = new ShapeDrawTool(this);
                 }

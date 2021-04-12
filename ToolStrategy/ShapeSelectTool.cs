@@ -69,5 +69,16 @@ namespace MonoPaint.ToolStrategy
                 }
             }
         }
+
+        public void Reset()
+        {
+            foreach(mCanvas c in playground.Canvases)
+            {
+                c.ForAllShapes((aShape shape) => {
+                    shape.Selected = false;
+                });
+            }
+        }
+
     }
 }

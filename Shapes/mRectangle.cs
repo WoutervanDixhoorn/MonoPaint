@@ -39,11 +39,11 @@ namespace MonoPaint
 
                 for(int i = 0; i < borderHeight; i++){
                     for(int j = 0; j < borderWidth; j++){
-                        if(j >= i*borderWidth - borderSize || j <= borderSize){
+                        if(j >= i*borderWidth - borderSize || j < borderSize){
                             borderData[i*borderWidth+j] = borderColor;
                         }else if(j >= borderWidth - borderSize){
                             borderData[i*borderWidth+j] = borderColor;
-                        }else if(i >= borderHeight - borderSize || i <= borderSize){
+                        }else if(i >= borderHeight - borderSize || i < borderSize){
                             borderData[i*borderWidth+j] = borderColor;
                         }                 
                     }

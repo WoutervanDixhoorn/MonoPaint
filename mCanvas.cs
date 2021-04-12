@@ -42,6 +42,14 @@ namespace MonoPaint
             }
         }
 
+        public void ForAllShapes(Action<aShape, SpriteBatch> iShapeFunction, SpriteBatch iSpriteBatch)
+        {
+            foreach(aShape shape in Shapes)
+            {
+                iShapeFunction(shape, iSpriteBatch);
+            }
+        }
+
         public void Load()
         {
             foreach(aShape shape in shapes)
