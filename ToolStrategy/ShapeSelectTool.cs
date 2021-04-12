@@ -70,6 +70,10 @@ namespace MonoPaint.ToolStrategy
             }
         }
 
+        public void Draw(SpriteBatch iSpriteBatch)
+        {
+        }
+
         public void Reset()
         {
             foreach(mCanvas c in playground.Canvases)

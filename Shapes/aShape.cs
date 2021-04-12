@@ -30,7 +30,6 @@ namespace MonoPaint
     
     public abstract class aShape
     {   
-        //TODO: Create a base constructor that can be called from any class implementing 'aShape'
         protected Texture2D shapeTexture;
         protected Color[] shapeData;
         protected Color color;
@@ -157,7 +156,7 @@ namespace MonoPaint
         }
 
         /*private funcs*/
-        void generateTransformRect()
+        protected void generateTransformRect()
         {
             selectionRect = new SelectionRectangle();
             selectionRect.Padding = 9;

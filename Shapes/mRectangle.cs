@@ -52,6 +52,11 @@ namespace MonoPaint
                 borderTexture = new Texture2D(ContentHandler.Instance.Graphics, borderWidth, borderHeight); 
                 borderTexture.SetData(borderData);
             }
+
+            if(transforming)
+            {
+                generateTransformRect();
+            }
         }
 
         public override void Unload()

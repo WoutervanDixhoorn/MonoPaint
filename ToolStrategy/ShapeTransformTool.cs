@@ -6,12 +6,11 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 using Input;
+using MonoPaint.Commands;
 using MonoPaint.Shapes;
 
 namespace MonoPaint.ToolStrategy
 {
-
-    //TODO: Maybe give each shape there own SlectionRect object;
 
     public class ShapeTransformTool : IShapeTool
     {
@@ -37,31 +36,29 @@ namespace MonoPaint.ToolStrategy
                 rect = transformingShape.SelectionRect;
             }
 
-
             ToggleHover();
 
             if(!leftClicked && InputManger.IsPressed(MouseInput.LeftButton))
             {
-                foreach(mCanvas c in playground.Canvases)
-                {
-                    c.ForAllShapes((aShape shape) => {
-                        if(shape.Hovered)
-                        {        
-                            if(transformingShape != null)
-                                transformingShape.Transforming = false;                    
-                            transformingShape = shape;
-                            transformingShape.Transforming = true;
-                        }
-                    });
-                }
+                SelectShapes();
             }else if(leftClicked && InputManger.IsReleased(MouseInput.LeftButton) && transformingShape != null)
             {
                 if(rect.BottomRight.Selected)
                 {
                     rect.BottomRight.Selected = false;
+
+                    int xDifShape = endX - transformingShape.X; 
+                    int yDifShape = endY - transformingShape.Y;
+
+                    int newWidth = Util.Clamp(xDifShape - rect.Padding, 1, playground.Width);
+                    int newHeight = Util.Clamp(yDifShape - rect.Padding, 1, playground.Width);
+
+                    //Create and execute command
+                    playground.ExecuteCommand(new ResizeCommand(transformingShape, newWidth, newHeight));     
                 }
+
             }else if(leftClicked && transformingShape != null){
-                    ChangeWidthBottomLeft(mX, mY);
+                    ChangeWithBottomLeft(mX, mY);
             }
 
             if(InputManger.IsPressed(MouseInput.LeftButton))
@@ -69,6 +66,10 @@ namespace MonoPaint.ToolStrategy
 
             if(InputManger.IsReleased(Input.MouseInput.LeftButton))
                 leftClicked = false;
+        }
+
+        public void Draw(SpriteBatch iSpriteBatch)
+        {
         }
 
         public void Reset()
@@ -79,7 +80,7 @@ namespace MonoPaint.ToolStrategy
             foreach(mCanvas c in playground.Canvases)
             {
                 c.ForAllShapes((aShape shape) => {
-                    shape.Selected = false;
+                    shape.Hovered = false;
                 });
             }
         }
@@ -97,8 +98,24 @@ namespace MonoPaint.ToolStrategy
                 });
             }
         }
-        
-        void ChangeWidthBottomLeft(int mX, int mY)
+
+        void SelectShapes()
+        {
+            foreach(mCanvas c in playground.Canvases)
+            {
+                c.ForAllShapes((aShape shape) => {
+                    if(shape.Hovered)
+                    {        
+                        if(transformingShape != null)
+                            transformingShape.Transforming = false;                    
+                        transformingShape = shape;
+                        transformingShape.Transforming = true;
+                    }
+                });
+            }
+        }
+
+        void ChangeWithBottomLeft(int mX, int mY)
         {
             if(rect.BottomRight.Contains(mX, mY) || rect.BottomRight.Selected)
             {
@@ -112,11 +129,9 @@ namespace MonoPaint.ToolStrategy
                 int xDif = endX - rect.SelectRect.X; 
                 int yDif = endY - rect.SelectRect.Y;
 
-                //Update selectionRectangle
-                {
                 //Update selection rect
-                rect.SelectRect.Width = xDif;
-                rect.SelectRect.Height = yDif;
+                rect.SelectRect.Width = Util.Clamp(xDif, 1, playground.Width);;
+                rect.SelectRect.Height = Util.Clamp(yDif, 1, playground.Width);;
                 rect.SelectRect.Load();
 
                 //Update bottomRight
@@ -128,16 +143,7 @@ namespace MonoPaint.ToolStrategy
 
                 //Update topRight
                 rect.TopRight.X = endX - (rect.TopRight.Width/2);
-                }
                 
-                //Update transformingShape;
-                int xDifShape = endX - transformingShape.X; 
-                int yDifShape = endY - transformingShape.Y;
-
-                transformingShape.Width = xDifShape - rect.Padding;
-                transformingShape.Height = yDifShape - rect.Padding;
-                transformingShape.Load();
-
             }
         }
 

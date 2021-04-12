@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 using Input;
+using MonoPaint.Commands;
 using MonoPaint.Shapes;
 
 namespace MonoPaint.ToolStrategy
@@ -22,11 +23,15 @@ namespace MonoPaint.ToolStrategy
         eShape curShape = eShape.Rect;
         aShape currentShape;
 
+        bool drawing;
+
         public ShapeDrawTool(mPlayground iPlayground)
         {
             playground = iPlayground;
             curShape = eShape.Rect;
             currentShape = null;
+
+            drawing = false;
         }
 
         bool leftClicked = false;
@@ -46,7 +51,7 @@ namespace MonoPaint.ToolStrategy
             }            
 
             if(!leftClicked && InputManger.IsPressed(MouseInput.LeftButton))
-            {
+            {   
                 if(curShape == eShape.Rect)
                     currentShape = new mRectangle(1,1, Color.Red);
 
@@ -59,7 +64,7 @@ namespace MonoPaint.ToolStrategy
                 currentShape.X = xPos1; currentShape.Y = yPos1;
                 currentShape.Load();
 
-                playground.AddShape(currentShape);
+                drawing = true;
 
                 Console.WriteLine("Start drawing at: [" + xPos1 + " | " + yPos1 + "]");
             }else if(leftClicked && InputManger.IsReleased(MouseInput.LeftButton))
@@ -68,6 +73,10 @@ namespace MonoPaint.ToolStrategy
                 currentShape.Height = Util.Clamp(rHeight, 1, playground.Height);
 
                 currentShape.Load();
+                playground.ExecuteCommand(new DrawCommand(currentShape, playground));
+
+                drawing = false;
+
                 Console.WriteLine("Added: " + currentShape.ToString());
             }else if(leftClicked)
             {
@@ -88,6 +97,12 @@ namespace MonoPaint.ToolStrategy
 
             if(InputManger.IsReleased(Input.MouseInput.LeftButton))
                 leftClicked = false;
+        }
+
+        public void Draw(SpriteBatch iSpriteBatch)
+        {
+            if(currentShape != null && drawing)
+                currentShape.Draw(iSpriteBatch);
         }
 
         public void Reset()

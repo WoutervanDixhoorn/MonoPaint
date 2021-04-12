@@ -74,6 +74,10 @@ namespace MonoPaint.Shapes
                 borderTexture.SetData(borderData);
             }
 
+            if(transforming)
+            {
+                generateTransformRect();
+            }
         }
 
         public Tuple<Ellipse, Ellipse> GetBorderEllipses()
