@@ -119,6 +119,16 @@ namespace MonoPaint
             screen.Unset();
             screen.Present(iSpriteBatch);
 
+            iSpriteBatch.Begin();
+            foreach(mCanvas c in layers)
+            {
+                c.ForAllShapes((aShape iShape) => {
+                    if(iShape.Transforming)
+                        iShape.SelectionRect.Draw(iSpriteBatch);
+                });
+            }
+            iSpriteBatch.End();
+
             /*Move to UI*/
             //Draw temp tool view
             iSpriteBatch.Begin();

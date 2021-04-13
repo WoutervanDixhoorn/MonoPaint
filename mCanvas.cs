@@ -68,7 +68,7 @@ namespace MonoPaint
 
         public void Update()
         {
-            
+
         }
 
         public void Draw(SpriteBatch iSpriteBatch)
