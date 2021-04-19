@@ -50,7 +50,14 @@ namespace MonoPaint
         protected bool hovered;
         protected bool drawBorder;
 
+        public Color Color{
+            set { color = value; }
+        }
     
+        public Color BorderColor{
+            set { borderColor = value; }
+        }
+
         public int Width
         {
             get { return width; }

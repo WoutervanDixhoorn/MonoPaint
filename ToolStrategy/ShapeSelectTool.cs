@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System;
 
 using Microsoft.Xna.Framework;
@@ -5,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 using Input;
+using MonoPaint.Commands;
 using MonoPaint.Shapes;
 
 namespace MonoPaint.ToolStrategy
@@ -37,6 +39,11 @@ namespace MonoPaint.ToolStrategy
             foreach(mCanvas c in playground.Canvases)
             {
                 c.ForAllShapes(SelectShape);
+            }
+
+            if(InputManger.IsKeyPressed(Keys.Delete) || InputManger.IsKeyPressed(Keys.EraseEof))
+            {
+                deleteShapes();
             }
 
             if(InputManger.IsPressed(MouseInput.LeftButton))
@@ -81,6 +88,26 @@ namespace MonoPaint.ToolStrategy
                 c.ForAllShapes((aShape shape) => {
                     shape.Selected = false;
                 });
+            }
+        }
+
+        void deleteShapes()
+        {
+            List<DeleteCommand> deletingShapes = new List<DeleteCommand>();
+
+            foreach(mCanvas c in playground.Canvases)
+            {
+                c.ForAllShapes((aShape shape) => {
+                   if(shape.Selected)
+                   {
+                        deletingShapes.Add(new DeleteCommand(shape, playground));
+                   }
+                });
+            }
+
+            foreach(DeleteCommand d in deletingShapes)
+            {
+                playground.ExecuteCommand(d);
             }
         }
 

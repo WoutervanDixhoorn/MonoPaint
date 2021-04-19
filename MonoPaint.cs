@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using MonoPaint.UI;
 using Input;
 
 namespace MonoPaint
@@ -17,6 +18,9 @@ namespace MonoPaint
 
         //PaintVars
         mPlayground monoPlayground;
+
+        //UI
+        UIButton testButton;
 
         public MonoPaint()
         {
@@ -35,7 +39,14 @@ namespace MonoPaint
 
             monoPlayground = new mPlayground();
 
+
+
             base.Initialize();
+        }
+
+        void onTestPress()
+        {
+            Console.WriteLine("Pressed Draw Button!!");
         }
 
         protected override void LoadContent()
@@ -50,12 +61,14 @@ namespace MonoPaint
             InputManger.Update();
 
             monoPlayground.Update();
-            
+
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
+            ContentHandler.Instance.Graphics.Clear(Color.Beige);
+              
             monoPlayground.Draw(spriteBatch);
 
             base.Draw(gameTime);

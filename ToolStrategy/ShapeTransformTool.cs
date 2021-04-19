@@ -42,10 +42,7 @@ namespace MonoPaint.ToolStrategy
             }
 
 
-            if(!leftClicked && InputManger.IsPressed(MouseInput.LeftButton))
-            {
-                
-            }else if(leftClicked && InputManger.IsReleased(MouseInput.LeftButton) && transformingShape != null)
+            if(leftClicked && InputManger.IsReleased(MouseInput.LeftButton) && transformingShape != null)
             {
                 UpdateShapes();
             }else if(leftClicked && transformingShape != null){
@@ -121,7 +118,7 @@ namespace MonoPaint.ToolStrategy
                     int yDifShape = endY - transformingShape.Y;
 
                     int newWidth = Util.Clamp(xDifShape - rect.Padding, 1, playground.Width);
-                    int newHeight = Util.Clamp(yDifShape - rect.Padding, 1, playground.Width);
+                    int newHeight = Util.Clamp(yDifShape - rect.Padding, 1, playground.Height);
 
                     //Create and execute command
                     playground.ExecuteCommand(new ResizeCommand(transformingShape, newWidth, newHeight));     
@@ -132,7 +129,7 @@ namespace MonoPaint.ToolStrategy
                     int yDifShape = endY - (transformingShape.Y);
 
                     int newWidth = Util.Clamp((xDifShape + transformingShape.Width) - rect.Padding, 1, playground.Width);
-                    int newHeight = Util.Clamp(yDifShape - rect.Padding, 1, playground.Width);
+                    int newHeight = Util.Clamp(yDifShape - rect.Padding, 1, playground.Height);
 
                     int newX = transformingShape.X - (xDifShape - rect.Padding);
                     int newY = transformingShape.Y;
@@ -146,7 +143,7 @@ namespace MonoPaint.ToolStrategy
                     int yDifShape = -(endY - transformingShape.Y);
 
                     int newWidth = Util.Clamp((xDifShape + transformingShape.Width) - rect.Padding, 1, playground.Width);
-                    int newHeight = Util.Clamp((yDifShape + transformingShape.Height) - rect.Padding, 1, playground.Width);
+                    int newHeight = Util.Clamp((yDifShape + transformingShape.Height) - rect.Padding, 1, playground.Height);
 
                     //TODO: Move x and y to command!!
                     int newX = transformingShape.X - (xDifShape - rect.Padding);
@@ -161,7 +158,7 @@ namespace MonoPaint.ToolStrategy
                     int yDifShape = -(endY - transformingShape.Y);
 
                     int newWidth = Util.Clamp(xDifShape - rect.Padding, 1, playground.Width);
-                    int newHeight = Util.Clamp((yDifShape + transformingShape.Height) - rect.Padding, 1, playground.Width);
+                    int newHeight = Util.Clamp((yDifShape + transformingShape.Height) - rect.Padding, 1, playground.Height);
 
                     int newX = transformingShape.X;
                     int newY = transformingShape.Y - (yDifShape - rect.Padding);

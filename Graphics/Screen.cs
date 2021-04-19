@@ -7,8 +7,12 @@ namespace MonoPaint.Graphics
     public class Screen
     {
         RenderTarget2D screenTarget;
-        
+
+        int x, y;        
         int width, height;
+
+        public int X{ set{ x = value; } get{ return x; }}
+        public int Y{ set{ y = value; } get{ return y; }}
 
         public int Width{ private set{ width = value; } get{ return width; }}
         public int Height{ private set{ height = value; } get{ return height; }}
@@ -17,6 +21,7 @@ namespace MonoPaint.Graphics
 
         public Screen(int iWidth, int iHeight)
         {   
+            x = 0; y = 0;
             width = iWidth; height = iHeight;
 
             GraphicsDevice gd = ContentHandler.Instance.Graphics;
@@ -59,9 +64,15 @@ namespace MonoPaint.Graphics
             SamplerState.LinearClamp, DepthStencilState.Default,
             RasterizerState.CullNone);
             
-            iSpriteBatch.Draw(screenTarget, new Rectangle(0,0, width, height), Color.White);
+            iSpriteBatch.Draw(screenTarget, new Rectangle(x,y, width, height), Color.White);
 
             iSpriteBatch.End();
+        }
+
+        public bool IsOnScreen(int iX, int iY)
+        {
+            return (iX > x && iX < x + width &&
+                    iY > y && iY < y + height);
         }
     }
 }

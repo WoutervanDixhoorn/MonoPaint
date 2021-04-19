@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 using Input;
+using MonoPaint.UI;
 using MonoPaint.Shapes;
 using MonoPaint.Commands;
 using MonoPaint.Graphics;
@@ -22,7 +23,7 @@ namespace MonoPaint
 
         IShapeTool shapeTool;
 
-        int width = 1280, height = 720;//TODO: Dont hard code width and height here
+        int width = 1280, height = 670;//TODO: Dont hard code width and height here
 
         public List<mCanvas> Canvases
         {
@@ -47,6 +48,11 @@ namespace MonoPaint
 
         Tool currentTool;
 
+        //UI
+        UIButton drawButton;
+        UIButton selectButton;
+        UIButton transformButton;
+
         public mPlayground()
         {
             screen = new Screen(width, height);
@@ -61,6 +67,29 @@ namespace MonoPaint
             shapeTool = new ShapeDrawTool(this);
             
             tempFont = ContentHandler.Instance.Content.Load<SpriteFont>("TempFont");
+
+            //UI
+            drawButton = new UIButton(5, 675, 80, 40);
+            drawButton.Text = "Draw";
+            drawButton.Color = Color.LightBlue;
+            drawButton.BorderColor = Color.LightGreen;
+            drawButton.OnPress = () => { shapeTool.Reset(); shapeTool = new ShapeDrawTool(this); currentTool = Tool.DrawTool; 
+                                       drawButton.Border = true; selectButton.Border = false; transformButton.Border = false;};
+        
+            selectButton = new UIButton(90, 675, 80, 40);
+            selectButton.Text = "Select";
+            selectButton.Color = Color.LightBlue;
+            selectButton.BorderColor = Color.LightGreen;
+            selectButton.OnPress = () => { shapeTool.Reset(); shapeTool = new ShapeSelectTool(this); currentTool = Tool.SelectTool; 
+                                         drawButton.Border = false; selectButton.Border = true; transformButton.Border = false;};
+            
+            transformButton = new UIButton(175, 675, 80, 40);
+            transformButton.Text = "Resize";
+            transformButton.Color = Color.LightBlue;
+            transformButton.BorderColor = Color.LightGreen;
+            transformButton.OnPress = () => { shapeTool.Reset(); shapeTool = new ShapeTransformTool(this); currentTool = Tool.TransformTool; 
+                                            drawButton.Border = false; selectButton.Border = false; transformButton.Border = true;};
+
         }
 
         public void AddShape(aShape shape)
@@ -79,6 +108,10 @@ namespace MonoPaint
             {
                 c.Load();
             }
+
+            drawButton.Load();
+            selectButton.Load();
+            transformButton.Load();
         }
 
         public void Unload()
@@ -87,6 +120,10 @@ namespace MonoPaint
             {
                 c.Unload();
             }
+
+            drawButton.Unload();
+            selectButton.Unload();
+            transformButton.Unload();
         }
 
         public void Update()
@@ -97,6 +134,10 @@ namespace MonoPaint
             }
 
             UpdateInput();
+
+            drawButton.Update();
+            selectButton.Update();
+            transformButton.Update();
         }
 
         public void Draw(SpriteBatch iSpriteBatch)
@@ -132,7 +173,12 @@ namespace MonoPaint
             /*Move to UI*/
             //Draw temp tool view
             iSpriteBatch.Begin();
-            iSpriteBatch.DrawString(tempFont, "Current Tool: " + currentTool.GetDescription(), new Vector2(1000, 700), Color.Black);
+            iSpriteBatch.DrawString(tempFont, "Current Tool: " + currentTool.GetDescription(), new Vector2(1000, 700), Color.White);
+            
+            drawButton.Draw(iSpriteBatch);
+            selectButton.Draw(iSpriteBatch);
+            transformButton.Draw(iSpriteBatch);
+
             iSpriteBatch.End();
         }
 
@@ -143,30 +189,17 @@ namespace MonoPaint
 
         void UpdateInput()
         {
-            /*TODO: Move to UI*/
-            if(InputManger.IsKeyPressed(Keys.Space))
-            {
-                shapeTool.Reset();
-                if(currentTool == Tool.DrawTool){
-                    currentTool = Tool.SelectTool;
-                    shapeTool = new ShapeSelectTool(this);
-                }
-                else if(currentTool == Tool.SelectTool){
-                    currentTool = Tool.TransformTool;
-                    shapeTool = new ShapeTransformTool(this);
-                }else if(currentTool == Tool.TransformTool)
+            int mX = InputManger.CurrentMouseState.X;
+            int mY = InputManger.CurrentMouseState.Y;
+
+            if(screen.IsOnScreen(mX, mY)){
+                if(InputManger.IsKeyDown(Keys.LeftControl) && InputManger.IsKeyPressed(Keys.Z))
                 {
-                    currentTool = Tool.DrawTool;
-                    shapeTool = new ShapeDrawTool(this);
+                    commandHandler.Undo();
                 }
-            }
 
-            if(InputManger.IsKeyReleased(Keys.Z))
-            {
-                commandHandler.Undo();
+                shapeTool.Update(); 
             }
-
-            shapeTool.Update(); 
         }
     }
 }
