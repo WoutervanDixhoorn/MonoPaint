@@ -10,6 +10,7 @@ namespace MonoPaint
         public mRectangle(int iWidth, int iHeight, Color? iColor = null) : 
         base(iWidth, iHeight, iColor)
         {
+            ShapeName = "rectangle";
         }
 
         public override bool Contains(int iX, int iY)

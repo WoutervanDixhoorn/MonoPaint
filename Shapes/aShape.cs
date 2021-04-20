@@ -30,6 +30,8 @@ namespace MonoPaint
     
     public abstract class aShape
     {   
+        public string ShapeName;
+
         protected Texture2D shapeTexture;
         protected Color[] shapeData;
         protected Color color;

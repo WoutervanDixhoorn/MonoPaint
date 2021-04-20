@@ -24,6 +24,8 @@ namespace MonoPaint.Shapes
         public mEllipse(int iWidth, int iHeight, Color? iColor = null) : 
         base(iWidth, iHeight, iColor)
         {
+            ShapeName = "ellipse";
+
             ellipse = new Ellipse(iWidth, iHeight);
         }
 

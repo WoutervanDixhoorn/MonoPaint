@@ -13,7 +13,8 @@ namespace MonoPaint
     public class mCanvas
     {   
         List<aShape> shapes;
-        public List<aShape> Shapes{ get{ return shapes; } }
+        public List<aShape> Shapes{ get{ return shapes; }
+                                    set{ shapes = value; } }
 
         int width, height;
         public int Width{ private set{ width = value; } get{ return width; }}

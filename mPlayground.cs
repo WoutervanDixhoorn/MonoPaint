@@ -11,6 +11,7 @@ using MonoPaint.Shapes;
 using MonoPaint.Commands;
 using MonoPaint.Graphics;
 using MonoPaint.ToolStrategy;
+using MonoPaint.FileParsing;
 
 namespace MonoPaint
 {
@@ -28,6 +29,22 @@ namespace MonoPaint
         public List<mCanvas> Canvases
         {
             get { return layers; }
+        }
+
+        public List<aShape> Shapes
+        {
+            get { 
+                List<aShape> list = new List<aShape>();
+
+                foreach(mCanvas c in Canvases)
+                {
+                    c.ForAllShapes((aShape shape) => {
+                        list.Add(shape);
+                    });
+                }
+
+                return list;
+            }
         }
 
         public int Width {
@@ -53,6 +70,9 @@ namespace MonoPaint
         UIButton selectButton;
         UIButton transformButton;
 
+        UIButton saveButton;
+        UIButton openButton;
+
         public mPlayground()
         {
             screen = new Screen(width, height);
@@ -65,7 +85,7 @@ namespace MonoPaint
             currentTool = Tool.DrawTool;
 
             shapeTool = new ShapeDrawTool(this);
-            
+
             tempFont = ContentHandler.Instance.Content.Load<SpriteFont>("TempFont");
 
             //UI
@@ -90,6 +110,19 @@ namespace MonoPaint
             transformButton.OnPress = () => { shapeTool.Reset(); shapeTool = new ShapeTransformTool(this); currentTool = Tool.TransformTool; 
                                             drawButton.Border = false; selectButton.Border = false; transformButton.Border = true;};
 
+            saveButton = new UIButton(1195, 675, 80, 40);
+            saveButton.Text = "Save";
+            saveButton.Color = Color.LightBlue;
+            saveButton.BorderColor = Color.LightGreen;
+            saveButton.OnPress = () => { ShapeSerializer.Serialize(Shapes); };
+
+            openButton = new UIButton(1110, 675, 80, 40);
+            openButton.Text = "Open";
+            openButton.Color = Color.LightBlue;
+            openButton.BorderColor = Color.LightGreen;
+            openButton.OnPress = () => { List<aShape> loadedShapes = ShapeSerializer.Deserialize().Result;
+                                        SetShapes(loadedShapes); };
+
         }
 
         public void AddShape(aShape shape)
@@ -102,6 +135,11 @@ namespace MonoPaint
             layers[0].Shapes.Remove(shape);
         }
 
+        public void SetShapes(List<aShape> iShapes)
+        {
+            layers[0].Shapes = iShapes;
+        }
+
         public void Load()
         {
             foreach(mCanvas c in layers)
@@ -112,6 +150,8 @@ namespace MonoPaint
             drawButton.Load();
             selectButton.Load();
             transformButton.Load();
+            saveButton.Load();
+            openButton.Load();
         }
 
         public void Unload()
@@ -124,6 +164,8 @@ namespace MonoPaint
             drawButton.Unload();
             selectButton.Unload();
             transformButton.Unload();
+            saveButton.Unload();
+            openButton.Unload();
         }
 
         public void Update()
@@ -138,6 +180,8 @@ namespace MonoPaint
             drawButton.Update();
             selectButton.Update();
             transformButton.Update();
+            saveButton.Update();
+            openButton.Update();
         }
 
         public void Draw(SpriteBatch iSpriteBatch)
@@ -178,6 +222,8 @@ namespace MonoPaint
             drawButton.Draw(iSpriteBatch);
             selectButton.Draw(iSpriteBatch);
             transformButton.Draw(iSpriteBatch);
+            saveButton.Draw(iSpriteBatch);
+            openButton.Draw(iSpriteBatch);
 
             iSpriteBatch.End();
         }
