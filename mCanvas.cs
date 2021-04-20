@@ -27,11 +27,6 @@ namespace MonoPaint
             width = iWidth;
             height = iHeight;
 
-            mEllipse ellipse = new mEllipse(100, 100, Color.Blue);
-            ellipse.X = 150; ellipse.Y = 200;
-            ellipse.Padding = 10;
-            shapes.Add(ellipse);
-
             Console.WriteLine("Initialized canvas with: " + shapes.Count + " shapes");
         }
 

@@ -1,0 +1,4 @@
+rectangle 449 247 215 160
+ellipse 919 152 208 270
+rectangle 122 403 158 133
+rectangle 196 118 84 131

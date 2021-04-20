@@ -1,5 +1,6 @@
 ellipse 150 200 100 100
-rectangle 582 306 220 146
-ellipse 977 186 107 189
-rectangle 202 390 139 124
-ellipse 384 106 88 137
+ellipse 380 134 76 45
+ellipse 664 315 1 1
+ellipse 67 413 107 130
+ellipse 576 192 228 245
+rectangle 374 416 142 146

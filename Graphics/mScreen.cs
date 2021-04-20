@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace MonoPaint.Graphics
 {
-    public class Screen
+    public class mScreen
     {
         RenderTarget2D screenTarget;
 
@@ -19,7 +19,7 @@ namespace MonoPaint.Graphics
 
         bool isSet;
 
-        public Screen(int iWidth, int iHeight)
+        public mScreen(int iWidth, int iHeight)
         {   
             x = 0; y = 0;
             width = iWidth; height = iHeight;

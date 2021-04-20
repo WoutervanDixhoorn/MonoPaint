@@ -1,11 +1,24 @@
 {
   "version": 2,
-  "dgSpecHash": "rO7CNXw3eORzgNfkXO9s7k26sVk5A/GX2EPHGncbWRUyN4s5CfY5z48FPfqEJT5S4Kk7M/2hE7JuUtoIFE7Ifw==",
+  "dgSpecHash": "saD5WLudixKv4gLBID3AtQ2yubujAiZWDcD8hGgmbDGcRZOWUg4ffq68r4cdfqDCjGc3iyplVtuRM+0T0kYksg==",
   "success": true,
   "projectFilePath": "D:\\School-D\\Jaar 2 1\\Periode 3\\Design Patterns\\MonoPaint\\MonoPaint.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\woute\\.nuget\\packages\\microsoft.win32\\1.0.0\\microsoft.win32.1.0.0.nupkg.sha512",
     "C:\\Users\\woute\\.nuget\\packages\\monogame.content.builder.task\\3.8.0.1641\\monogame.content.builder.task.3.8.0.1641.nupkg.sha512",
-    "C:\\Users\\woute\\.nuget\\packages\\monogame.framework.desktopgl\\3.8.0.1641\\monogame.framework.desktopgl.3.8.0.1641.nupkg.sha512"
+    "C:\\Users\\woute\\.nuget\\packages\\monogame.framework.desktopgl\\3.8.0.1641\\monogame.framework.desktopgl.3.8.0.1641.nupkg.sha512",
+    "C:\\Users\\woute\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.13\\microsoft.netcore.app.host.win-x64.3.1.13.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Microsoft.Win32 1.0.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework '.NETCoreApp,Version=v3.1'. This package may not be fully compatible with your project.",
+      "libraryId": "Microsoft.Win32",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v3.1"
+      ]
+    }
+  ]
 }

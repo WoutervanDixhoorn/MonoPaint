@@ -1,5 +1,9 @@
 using System.ComponentModel;
 using System.Collections.Generic;
+using System;
+using System.IO;
+using System.Security;
+using System.Windows.Forms;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -17,7 +21,7 @@ namespace MonoPaint
 {
     public class mPlayground
     {
-        Screen screen;
+        mScreen screen;
         List<mCanvas> layers;
 
         CommandHandler commandHandler;
@@ -57,14 +61,6 @@ namespace MonoPaint
 
         SpriteFont tempFont;
 
-        enum Tool{
-            [Description("Drawing")]DrawTool,
-            [Description("Selecting")]SelectTool,
-            [Description("Transform")]TransformTool
-        }
-
-        Tool currentTool;
-
         //UI
         UIButton drawButton;
         UIButton selectButton;
@@ -75,14 +71,12 @@ namespace MonoPaint
 
         public mPlayground()
         {
-            screen = new Screen(width, height);
+            screen = new mScreen(width, height);
 
             layers = new List<mCanvas>();
             layers.Add(new mCanvas(width, height));
 
             commandHandler = new CommandHandler();
-
-            currentTool = Tool.DrawTool;
 
             shapeTool = new ShapeDrawTool(this);
 
@@ -93,36 +87,78 @@ namespace MonoPaint
             drawButton.Text = "Draw";
             drawButton.Color = Color.LightBlue;
             drawButton.BorderColor = Color.LightGreen;
-            drawButton.OnPress = () => { shapeTool.Reset(); shapeTool = new ShapeDrawTool(this); currentTool = Tool.DrawTool; 
+            drawButton.Border = true;
+            drawButton.OnPress = () => { shapeTool.Reset(); shapeTool = new ShapeDrawTool(this);
                                        drawButton.Border = true; selectButton.Border = false; transformButton.Border = false;};
         
             selectButton = new UIButton(90, 675, 80, 40);
             selectButton.Text = "Select";
             selectButton.Color = Color.LightBlue;
             selectButton.BorderColor = Color.LightGreen;
-            selectButton.OnPress = () => { shapeTool.Reset(); shapeTool = new ShapeSelectTool(this); currentTool = Tool.SelectTool; 
+            selectButton.OnPress = () => { shapeTool.Reset(); shapeTool = new ShapeSelectTool(this);
                                          drawButton.Border = false; selectButton.Border = true; transformButton.Border = false;};
             
             transformButton = new UIButton(175, 675, 80, 40);
             transformButton.Text = "Resize";
             transformButton.Color = Color.LightBlue;
             transformButton.BorderColor = Color.LightGreen;
-            transformButton.OnPress = () => { shapeTool.Reset(); shapeTool = new ShapeTransformTool(this); currentTool = Tool.TransformTool; 
+            transformButton.OnPress = () => { shapeTool.Reset(); shapeTool = new ShapeTransformTool(this);
                                             drawButton.Border = false; selectButton.Border = false; transformButton.Border = true;};
 
             saveButton = new UIButton(1195, 675, 80, 40);
             saveButton.Text = "Save";
             saveButton.Color = Color.LightBlue;
             saveButton.BorderColor = Color.LightGreen;
-            saveButton.OnPress = () => { ShapeSerializer.Serialize(Shapes); };
+            saveButton.OnPress = savePlayground;
 
             openButton = new UIButton(1110, 675, 80, 40);
             openButton.Text = "Open";
             openButton.Color = Color.LightBlue;
             openButton.BorderColor = Color.LightGreen;
-            openButton.OnPress = () => { List<aShape> loadedShapes = ShapeSerializer.Deserialize().Result;
-                                        SetShapes(loadedShapes); };
+            openButton.OnPress =  loadPlayground;
 
+        }
+
+        void savePlayground()
+        {
+            var filePath = string.Empty;
+
+            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+            {
+                saveFileDialog.InitialDirectory = "D:\\School-D\\Jaar 2 1\\Periode 3\\Design Patterns\\MonoPaint\\Saves";
+                saveFileDialog.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+                saveFileDialog.FilterIndex = 2;
+                saveFileDialog.RestoreDirectory = true;
+
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    filePath = saveFileDialog.FileName;
+                }
+            }
+
+            ShapeSerializer.Serialize(Shapes, filePath);
+            
+        }
+
+        void loadPlayground()
+        {
+            var filePath = string.Empty;
+
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.InitialDirectory = "D:\\School-D\\Jaar 2 1\\Periode 3\\Design Patterns\\MonoPaint\\Saves";
+                openFileDialog.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+                openFileDialog.FilterIndex = 2;
+                openFileDialog.RestoreDirectory = true;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    filePath = openFileDialog.FileName;
+                }
+            }
+
+             List<aShape> loadedShapes = ShapeSerializer.Deserialize(filePath).Result;
+             SetShapes(loadedShapes);
         }
 
         public void AddShape(aShape shape)
@@ -203,7 +239,7 @@ namespace MonoPaint
 
             screen.Unset();
             screen.Present(iSpriteBatch);
-
+            
             iSpriteBatch.Begin();
             foreach(mCanvas c in layers)
             {
@@ -217,8 +253,7 @@ namespace MonoPaint
             /*Move to UI*/
             //Draw temp tool view
             iSpriteBatch.Begin();
-            iSpriteBatch.DrawString(tempFont, "Current Tool: " + currentTool.GetDescription(), new Vector2(1000, 700), Color.White);
-            
+
             drawButton.Draw(iSpriteBatch);
             selectButton.Draw(iSpriteBatch);
             transformButton.Draw(iSpriteBatch);
@@ -238,10 +273,14 @@ namespace MonoPaint
             int mX = InputManger.CurrentMouseState.X;
             int mY = InputManger.CurrentMouseState.Y;
 
+            //TODO: Maybe fix the whole microsoft.xna.. thing
             if(screen.IsOnScreen(mX, mY)){
-                if(InputManger.IsKeyDown(Keys.LeftControl) && InputManger.IsKeyPressed(Keys.Z))
+                if(InputManger.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftControl) && InputManger.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Z))
                 {
                     commandHandler.Undo();
+                }else if(InputManger.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftControl) && InputManger.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Y))
+                {
+                    commandHandler.Redo();
                 }
 
                 shapeTool.Update(); 
