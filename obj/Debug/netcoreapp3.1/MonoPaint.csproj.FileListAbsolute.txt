@@ -21,3 +21,5 @@ D:\School-D\Jaar 2 1\Periode 3\Design Patterns\MonoPaint\obj\Debug\netcoreapp3.1
 D:\School-D\Jaar 2 1\Periode 3\Design Patterns\MonoPaint\obj\Debug\netcoreapp3.1\MonoPaint.dll
 D:\School-D\Jaar 2 1\Periode 3\Design Patterns\MonoPaint\obj\Debug\netcoreapp3.1\MonoPaint.pdb
 D:\School-D\Jaar 2 1\Periode 3\Design Patterns\MonoPaint\obj\Debug\netcoreapp3.1\MonoPaint.genruntimeconfig.cache
+D:\School-D\Jaar 2 1\Periode 3\Design Patterns\MonoPaint\bin\Debug\netcoreapp3.1\Content\TempFont.xnb
+D:\School-D\Jaar 2 1\Periode 3\Design Patterns\MonoPaint\bin\Debug\netcoreapp3.1\Microsoft.Win32.dll

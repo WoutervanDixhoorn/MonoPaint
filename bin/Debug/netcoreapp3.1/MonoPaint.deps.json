@@ -8,11 +8,20 @@
     ".NETCoreApp,Version=v3.1": {
       "MonoPaint/1.0.0": {
         "dependencies": {
+          "Microsoft.Win32": "1.0.0",
           "MonoGame.Content.Builder.Task": "3.8.0.1641",
           "MonoGame.Framework.DesktopGL": "3.8.0.1641"
         },
         "runtime": {
           "MonoPaint.dll": {}
+        }
+      },
+      "Microsoft.Win32/1.0.0": {
+        "runtime": {
+          "lib/net40/Microsoft.Win32.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       },
       "MonoGame.Content.Builder.Task/3.8.0.1641": {},
@@ -73,6 +82,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "Microsoft.Win32/1.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-J+b0OOgZL/LwR53ljb67wFJZO3h6x/iLkCYULiAQbr2efxtgiecfwuWo8m8CXOkq7Ejf5vYWuU2nZoox/Lbghg==",
+      "path": "microsoft.win32/1.0.0",
+      "hashPath": "microsoft.win32.1.0.0.nupkg.sha512"
     },
     "MonoGame.Content.Builder.Task/3.8.0.1641": {
       "type": "package",
