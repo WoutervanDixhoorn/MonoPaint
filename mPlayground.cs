@@ -126,7 +126,7 @@ namespace MonoPaint
             using (SaveFileDialog saveFileDialog = new SaveFileDialog())
             {
                 saveFileDialog.InitialDirectory = "D:\\School-D\\Jaar 2 1\\Periode 3\\Design Patterns\\MonoPaint\\Saves";
-                saveFileDialog.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+                saveFileDialog.Filter = "monoPaint files (*.mp)|";
                 saveFileDialog.FilterIndex = 2;
                 saveFileDialog.RestoreDirectory = true;
 
@@ -136,8 +136,15 @@ namespace MonoPaint
                 }
             }
 
-            ShapeSerializer.Serialize(Shapes, filePath);
-            
+            if(filePath != string.Empty){
+                int index = filePath.LastIndexOf('.');
+                if(filePath.Substring(index+1) == "mp")
+                {
+                    ShapeSerializer.Serialize(Shapes, filePath);
+                }else{
+                    ShapeSerializer.Serialize(Shapes, filePath + ".mp");
+                }
+            }    
         }
 
         void loadPlayground()
@@ -147,8 +154,8 @@ namespace MonoPaint
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
                 openFileDialog.InitialDirectory = "D:\\School-D\\Jaar 2 1\\Periode 3\\Design Patterns\\MonoPaint\\Saves";
-                openFileDialog.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
-                openFileDialog.FilterIndex = 2;
+                openFileDialog.Filter = "monoPaint files (*.mp)|";
+                openFileDialog.FilterIndex = 1;
                 openFileDialog.RestoreDirectory = true;
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
@@ -157,8 +164,11 @@ namespace MonoPaint
                 }
             }
 
-             List<aShape> loadedShapes = ShapeSerializer.Deserialize(filePath).Result;
-             SetShapes(loadedShapes);
+            if(filePath != string.Empty){
+                List<aShape> loadedShapes = ShapeSerializer.Deserialize(filePath).Result;
+                SetShapes(loadedShapes);
+            }
+
         }
 
         public void AddShape(aShape shape)
