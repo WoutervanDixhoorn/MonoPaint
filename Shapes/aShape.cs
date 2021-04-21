@@ -90,6 +90,26 @@ namespace MonoPaint
             set { position.Y = value; }
         }
 
+        public Vector2 TopLeft
+        {
+            get { return new Vector2(X, Y); }
+        }
+
+        public Vector2 TopRight
+        {
+            get { return new Vector2(X + width, Y);}
+        }
+
+        public Vector2 BottomLeft
+        {
+            get { return new Vector2(X, Y + height); }
+        }
+
+        public Vector2 BottomRight
+        {
+            get { return new Vector2(X + width, Y + height); }
+        }
+
         public SelectionRectangle SelectionRect
         {
             get { return selectionRect; }
@@ -137,7 +157,15 @@ namespace MonoPaint
             color = iColor ?? Color.HotPink;
             borderColor = Color.Black;
         }
-
+        public bool Intersects(aShape iShape)
+        {
+            if((  TopLeft.X  >  iShape.BottomRight.X )||(BottomRight.X  <  iShape.TopLeft.X)
+            ||(TopLeft.Y > iShape.BottomRight.Y )||(BottomRight.Y  <  iShape.TopLeft.Y))
+            {
+                return false;
+            }
+            return true;
+        }
         public abstract bool Contains(int iX, int iY);
         public abstract void Load();
         public abstract void LoadWhileDrawing(); //NOTE: This is temp code for drawing faster ellipse
