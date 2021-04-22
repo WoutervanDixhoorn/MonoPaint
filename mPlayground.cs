@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.Collections.Generic;
 using System;
@@ -131,17 +132,22 @@ namespace MonoPaint
         {
             var filePath = string.Empty;
 
-            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
-            {
-                saveFileDialog.InitialDirectory = "D:\\School-D\\Jaar 2 1\\Periode 3\\Design Patterns\\MonoPaint\\Saves";
-                saveFileDialog.Filter = "monoPaint files (*.mp)|";
-                saveFileDialog.FilterIndex = 2;
-                saveFileDialog.RestoreDirectory = true;
+            if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows)){
 
-                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                using (SaveFileDialog saveFileDialog = new SaveFileDialog())
                 {
-                    filePath = saveFileDialog.FileName;
+                    saveFileDialog.InitialDirectory = "D:\\School-D\\Jaar 2 1\\Periode 3\\Design Patterns\\MonoPaint\\Saves";
+                    saveFileDialog.Filter = "monoPaint files (*.mp)|";
+                    saveFileDialog.FilterIndex = 2;
+                    saveFileDialog.RestoreDirectory = true;
+
+                    if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        filePath = saveFileDialog.FileName;
+                    }
                 }
+            }else{
+                filePath = "Saves/save.mp";
             }
 
             if(filePath != string.Empty){
@@ -159,17 +165,23 @@ namespace MonoPaint
         {
             var filePath = string.Empty;
 
-            using (OpenFileDialog openFileDialog = new OpenFileDialog())
-            {
-                openFileDialog.InitialDirectory = "D:\\School-D\\Jaar 2 1\\Periode 3\\Design Patterns\\MonoPaint\\Saves";
-                openFileDialog.Filter = "monoPaint files (*.mp)|";
-                openFileDialog.FilterIndex = 1;
-                openFileDialog.RestoreDirectory = true;
 
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
+            if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows)){
+
+                using (OpenFileDialog openFileDialog = new OpenFileDialog())
                 {
-                    filePath = openFileDialog.FileName;
+                    openFileDialog.InitialDirectory = "D:\\School-D\\Jaar 2 1\\Periode 3\\Design Patterns\\MonoPaint\\Saves";
+                    openFileDialog.Filter = "monoPaint files (*.mp)|";
+                    openFileDialog.FilterIndex = 1;
+                    openFileDialog.RestoreDirectory = true;
+
+                    if (openFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        filePath = openFileDialog.FileName;
+                    }
                 }
+            }else{
+                filePath = "Saves/save.mp";
             }
 
             if(filePath != string.Empty){
