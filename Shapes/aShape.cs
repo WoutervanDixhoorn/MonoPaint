@@ -47,6 +47,7 @@ namespace MonoPaint
         protected int borderSize;
         protected Vector2 position;
         
+        protected bool visible;
         protected bool selected;
         protected bool transforming;
         protected bool hovered;
@@ -54,6 +55,7 @@ namespace MonoPaint
 
         public Color Color{
             set { color = value; }
+            get { return color;}
         }
     
         public Color BorderColor{
@@ -115,6 +117,12 @@ namespace MonoPaint
             get { return selectionRect; }
         }
 
+        public bool Visible
+        {
+            get { return visible; }
+            set { visible = value;}
+        }
+
         public bool Selected
         {
             get { return selected; }
@@ -126,7 +134,7 @@ namespace MonoPaint
             get { return transforming; }
             set { transforming = value;
              if(transforming && selectionRect.SelectRect == null){
-                 generateTransformRect();
+                 GenerateTransformRect();
                }}
         }
 
@@ -148,6 +156,8 @@ namespace MonoPaint
             {
                 throw new NotSupportedException("Cant draw shapes with a width or height lower then 1 yet");
             }
+
+            visible = true;
 
             width = iWidth;
             height = iHeight;
@@ -172,6 +182,9 @@ namespace MonoPaint
         public abstract void Unload();
         public void Draw(SpriteBatch iSpriteBatch, float iAlpha = 1)
         {
+            if(!visible)
+                return;
+
             if(shapeTexture == null)
             {
                 throw new System.NullReferenceException("shapeTexture is null");
@@ -194,7 +207,7 @@ namespace MonoPaint
         }
 
         /*private funcs*/
-        protected void generateTransformRect()
+        public void GenerateTransformRect()
         {
             selectionRect = new SelectionRectangle();
             selectionRect.Padding = 9;

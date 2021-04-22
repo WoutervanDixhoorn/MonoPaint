@@ -64,6 +64,7 @@ namespace MonoPaint
         //UI
         UIButton drawButton;
         UIButton selectButton;
+        UIButton moveButton;
         UIButton transformButton;
 
         UIButton saveButton;
@@ -89,21 +90,28 @@ namespace MonoPaint
             drawButton.BorderColor = Color.LightGreen;
             drawButton.Border = true;
             drawButton.OnPress = () => { shapeTool.Reset(); shapeTool = new ShapeDrawTool(this);
-                                       drawButton.Border = true; selectButton.Border = false; transformButton.Border = false;};
+                                       drawButton.Border = true; selectButton.Border = false; moveButton.Border = false; transformButton.Border = false;};
         
             selectButton = new UIButton(90, 675, 80, 40);
             selectButton.Text = "Select";
             selectButton.Color = Color.LightBlue;
             selectButton.BorderColor = Color.LightGreen;
             selectButton.OnPress = () => { shapeTool.Reset(); shapeTool = new ShapeSelectTool(this);
-                                         drawButton.Border = false; selectButton.Border = true; transformButton.Border = false;};
+                                         drawButton.Border = false; selectButton.Border = true; moveButton.Border = false; transformButton.Border = false;};
             
-            transformButton = new UIButton(175, 675, 80, 40);
+            moveButton = new UIButton(175, 675, 80, 40);
+            moveButton.Text = "Move";
+            moveButton.Color = Color.LightBlue;
+            moveButton.BorderColor = Color.LightGreen;
+            moveButton.OnPress = () => { shapeTool.Reset(); shapeTool = new ShapeMoveTool(this);
+                                         drawButton.Border = false; selectButton.Border = false; moveButton.Border = true; transformButton.Border = false;};
+
+            transformButton = new UIButton(260, 675, 80, 40);
             transformButton.Text = "Resize";
             transformButton.Color = Color.LightBlue;
             transformButton.BorderColor = Color.LightGreen;
             transformButton.OnPress = () => { shapeTool.Reset(); shapeTool = new ShapeTransformTool(this);
-                                            drawButton.Border = false; selectButton.Border = false; transformButton.Border = true;};
+                                            drawButton.Border = false; selectButton.Border = false; moveButton.Border = false; transformButton.Border = true;};
 
             saveButton = new UIButton(1195, 675, 80, 40);
             saveButton.Text = "Save";
@@ -195,6 +203,7 @@ namespace MonoPaint
 
             drawButton.Load();
             selectButton.Load();
+            moveButton.Load();
             transformButton.Load();
             saveButton.Load();
             openButton.Load();
@@ -209,6 +218,7 @@ namespace MonoPaint
 
             drawButton.Unload();
             selectButton.Unload();
+            moveButton.Unload();
             transformButton.Unload();
             saveButton.Unload();
             openButton.Unload();
@@ -225,6 +235,7 @@ namespace MonoPaint
 
             drawButton.Update();
             selectButton.Update();
+            moveButton.Update();
             transformButton.Update();
             saveButton.Update();
             openButton.Update();
@@ -266,6 +277,7 @@ namespace MonoPaint
 
             drawButton.Draw(iSpriteBatch);
             selectButton.Draw(iSpriteBatch);
+            moveButton.Draw(iSpriteBatch);
             transformButton.Draw(iSpriteBatch);
             saveButton.Draw(iSpriteBatch);
             openButton.Draw(iSpriteBatch);

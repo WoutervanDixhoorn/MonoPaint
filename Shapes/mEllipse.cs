@@ -78,7 +78,7 @@ namespace MonoPaint.Shapes
 
             if(transforming)
             {
-                generateTransformRect();
+                GenerateTransformRect();
             }
         }
 

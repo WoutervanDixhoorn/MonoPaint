@@ -56,7 +56,7 @@ namespace MonoPaint
 
             if(transforming)
             {
-                generateTransformRect();
+                GenerateTransformRect();
             }
         }
 
