@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System;
 using System.IO;
 using System.Security;
+#if Windows
 using System.Windows.Forms;
+#endif
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -132,8 +134,7 @@ namespace MonoPaint
         {
             var filePath = string.Empty;
 
-            if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows)){
-
+#if Windows
                 using (SaveFileDialog saveFileDialog = new SaveFileDialog())
                 {
                     saveFileDialog.InitialDirectory = "D:\\School-D\\Jaar 2 1\\Periode 3\\Design Patterns\\MonoPaint\\Saves";
@@ -146,9 +147,9 @@ namespace MonoPaint
                         filePath = saveFileDialog.FileName;
                     }
                 }
-            }else{
+#elif OSX
                 filePath = "Saves/save.mp";
-            }
+#endif
 
             if(filePath != string.Empty){
                 int index = filePath.LastIndexOf('.');

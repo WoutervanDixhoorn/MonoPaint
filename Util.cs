@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using System;
 using System.Linq;
+using System.Runtime.InteropServices;
+
 namespace MonoPaint
 {
     public static class EnumExtensions
@@ -39,5 +41,17 @@ namespace MonoPaint
             return value;
         }
 
+    }
+
+    public static class OperatingSystem
+    {
+        public static bool IsWindows() =>
+            RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+
+        public static bool IsMacOS() =>
+            RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+
+        public static bool IsLinux() =>
+            RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
     }
 }
