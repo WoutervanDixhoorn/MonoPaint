@@ -36,6 +36,9 @@ namespace MonoPaint.ToolStrategy
             int mX = InputManger.CurrentMouseState.X;
             int mY = InputManger.CurrentMouseState.Y;
 
+            if(!transforming)
+                HoverShapes();
+
             SelectShapes();
 
             if(transformingShape != null){
@@ -79,7 +82,7 @@ namespace MonoPaint.ToolStrategy
             }
         }
 
-        void SelectShapes()
+        void HoverShapes()
         {
             int mX = InputManger.CurrentMouseState.X;
             int mY = InputManger.CurrentMouseState.Y;
@@ -94,13 +97,21 @@ namespace MonoPaint.ToolStrategy
                     }
                 });
             }
+        }
+
+        void SelectShapes()
+        {
+            int mX = InputManger.CurrentMouseState.X;
+            int mY = InputManger.CurrentMouseState.Y;
 
             if(!leftClicked && InputManger.IsPressed(MouseInput.LeftButton)){
                 foreach(mCanvas c in playground.Canvases)
                 {
                     c.ForAllShapes((aShape shape) => {
                         if(shape.Hovered)
-                        {        
+                        {    
+                            transforming = true;
+
                             if(transformingShape != null)
                                 transformingShape.Transforming = false;                    
                             transformingShape = shape;
@@ -120,6 +131,15 @@ namespace MonoPaint.ToolStrategy
                         }
                     });
                 }
+            }
+
+            //Quick fix for resizing shapes ontop or under shapes
+            if(leftClicked && transforming)
+            {
+                bool overTransformingShape = transformingShape.Contains(mX, mY);
+
+                if(!overTransformingShape)
+                    transforming = false;
             }
         }
 
