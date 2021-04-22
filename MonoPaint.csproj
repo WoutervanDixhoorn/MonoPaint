@@ -14,9 +14,6 @@
   <PropertyGroup Condition="'$(IsOSX)'=='true'">
     <DefineConstants>OSX</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(IsLinux)'=='true'">
-    <DefineConstants>Linux</DefineConstants>
-  </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Icon.ico</ApplicationIcon>

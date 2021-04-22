@@ -181,13 +181,18 @@ namespace MonoPaint
                         filePath = openFileDialog.FileName;
                     }
                 }
+            }
 #elif OSX
                 filePath = "Saves/save.mp";
 #endif
 
             if(filePath != string.Empty){
+                if(File.Exists(filePath)){
                 List<aShape> loadedShapes = ShapeSerializer.Deserialize(filePath).Result;
                 SetShapes(loadedShapes);
+                }else{
+                    Console.WriteLine("You need to save before you can open the save");
+                }
             }
 
         }
