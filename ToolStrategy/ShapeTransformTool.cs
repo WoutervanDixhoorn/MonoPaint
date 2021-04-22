@@ -17,6 +17,7 @@ namespace MonoPaint.ToolStrategy
         mPlayground playground;
 
         aShape transformingShape;
+        aShape drawingShape;
         SelectionRectangle rect;
 
         bool transforming;
@@ -61,6 +62,8 @@ namespace MonoPaint.ToolStrategy
 
         public void Draw(SpriteBatch iSpriteBatch)
         {
+            if(drawingShape != null)
+                drawingShape.Draw(iSpriteBatch);
         }
 
         public void Reset()
@@ -102,6 +105,18 @@ namespace MonoPaint.ToolStrategy
                                 transformingShape.Transforming = false;                    
                             transformingShape = shape;
                             transformingShape.Transforming = true;
+
+                            //Draw new size
+                            if(shape.ShapeName == "rectangle")
+                            {
+                                drawingShape = new mRectangle(transformingShape.Width, transformingShape.Height, transformingShape.Color);
+                            }else{
+                                drawingShape = new mEllipse(transformingShape.Width, transformingShape.Height, transformingShape.Color);    
+                            }
+                            
+                            drawingShape.X = transformingShape.X;
+                            drawingShape.Y = transformingShape.Y;
+                            drawingShape.LoadWhileDrawing();
                         }
                     });
                 }
@@ -111,61 +126,61 @@ namespace MonoPaint.ToolStrategy
         void UpdateShapes()
         {
             if(rect.BottomRight.Selected)
-                {
-                    rect.BottomRight.Selected = false;
+            {
+                rect.BottomRight.Selected = false;
 
-                    int xDifShape = endX - transformingShape.X; 
-                    int yDifShape = endY - transformingShape.Y;
+                int xDifShape = endX - transformingShape.X; 
+                int yDifShape = endY - transformingShape.Y;
 
-                    int newWidth = Util.Clamp(xDifShape - rect.Padding, 1, playground.Width);
-                    int newHeight = Util.Clamp(yDifShape - rect.Padding, 1, playground.Height);
+                int newWidth = Util.Clamp(xDifShape - rect.Padding, 1, playground.Width);
+                int newHeight = Util.Clamp(yDifShape - rect.Padding, 1, playground.Height);
 
-                    //Create and execute command
-                    playground.ExecuteCommand(new ResizeCommand(transformingShape, newWidth, newHeight));     
-                }else if(rect.BottomLeft.Selected){
-                    rect.BottomLeft.Selected = false;
+                //Create and execute command
+                playground.ExecuteCommand(new ResizeCommand(transformingShape, newWidth, newHeight));     
+            }else if(rect.BottomLeft.Selected){
+                rect.BottomLeft.Selected = false;
 
-                    int xDifShape = -(endX - transformingShape.X); 
-                    int yDifShape = endY - (transformingShape.Y);
+                int xDifShape = -(endX - transformingShape.X); 
+                int yDifShape = endY - (transformingShape.Y);
 
-                    int newWidth = Util.Clamp((xDifShape + transformingShape.Width) - rect.Padding, 1, playground.Width);
-                    int newHeight = Util.Clamp(yDifShape - rect.Padding, 1, playground.Height);
+                int newWidth = Util.Clamp((xDifShape + transformingShape.Width) - rect.Padding, 1, playground.Width);
+                int newHeight = Util.Clamp(yDifShape - rect.Padding, 1, playground.Height);
 
-                    int newX = transformingShape.X - (xDifShape - rect.Padding);
-                    int newY = transformingShape.Y;
+                int newX = transformingShape.X - (xDifShape - rect.Padding);
+                int newY = transformingShape.Y;
 
-                    //Create and execute command
-                    playground.ExecuteCommand(new ResizeCommand(transformingShape, newWidth, newHeight, newX, newY));     
-                }else if(rect.TopLeft.Selected){
-                    rect.TopLeft.Selected = false;
+                //Create and execute command
+                playground.ExecuteCommand(new ResizeCommand(transformingShape, newWidth, newHeight, newX, newY));     
+            }else if(rect.TopLeft.Selected){
+                rect.TopLeft.Selected = false;
 
-                    int xDifShape = -(endX - transformingShape.X); 
-                    int yDifShape = -(endY - transformingShape.Y);
+                int xDifShape = -(endX - transformingShape.X); 
+                int yDifShape = -(endY - transformingShape.Y);
 
-                    int newWidth = Util.Clamp((xDifShape + transformingShape.Width) - rect.Padding, 1, playground.Width);
-                    int newHeight = Util.Clamp((yDifShape + transformingShape.Height) - rect.Padding, 1, playground.Height);
+                int newWidth = Util.Clamp((xDifShape + transformingShape.Width) - rect.Padding, 1, playground.Width);
+                int newHeight = Util.Clamp((yDifShape + transformingShape.Height) - rect.Padding, 1, playground.Height);
 
-                    //TODO: Move x and y to command!!
-                    int newX = transformingShape.X - (xDifShape - rect.Padding);
-                    int newY = transformingShape.Y - (yDifShape - rect.Padding);
+                //TODO: Move x and y to command!!
+                int newX = transformingShape.X - (xDifShape - rect.Padding);
+                int newY = transformingShape.Y - (yDifShape - rect.Padding);
 
-                    //Create and execute command
-                    playground.ExecuteCommand(new ResizeCommand(transformingShape, newWidth, newHeight, newX, newY));     
-                }else if(rect.TopRight.Selected){
-                    rect.TopRight.Selected = false;
+                //Create and execute command
+                playground.ExecuteCommand(new ResizeCommand(transformingShape, newWidth, newHeight, newX, newY));     
+            }else if(rect.TopRight.Selected){
+                rect.TopRight.Selected = false;
 
-                    int xDifShape = endX - transformingShape.X; 
-                    int yDifShape = -(endY - transformingShape.Y);
+                int xDifShape = endX - transformingShape.X; 
+                int yDifShape = -(endY - transformingShape.Y);
 
-                    int newWidth = Util.Clamp(xDifShape - rect.Padding, 1, playground.Width);
-                    int newHeight = Util.Clamp((yDifShape + transformingShape.Height) - rect.Padding, 1, playground.Height);
+                int newWidth = Util.Clamp(xDifShape - rect.Padding, 1, playground.Width);
+                int newHeight = Util.Clamp((yDifShape + transformingShape.Height) - rect.Padding, 1, playground.Height);
 
-                    int newX = transformingShape.X;
-                    int newY = transformingShape.Y - (yDifShape - rect.Padding);
+                int newX = transformingShape.X;
+                int newY = transformingShape.Y - (yDifShape - rect.Padding);
 
-                    //Create and execute command
-                    playground.ExecuteCommand(new ResizeCommand(transformingShape, newWidth, newHeight, newX, newY));     
-                }
+                //Create and execute command
+                playground.ExecuteCommand(new ResizeCommand(transformingShape, newWidth, newHeight, newX, newY));     
+            }
         }
 
         void ChangeWithTopLeft(int mX, int mY)
@@ -197,6 +212,17 @@ namespace MonoPaint.ToolStrategy
 
                 //Update topRight
                 rect.TopRight.Y = endY - (rect.TopLeft.Height/2);
+
+                #region Update Helper Rect
+                int xDifShape = -(endX - transformingShape.X); 
+                int yDifShape = -(endY - transformingShape.Y);
+                int drawWidth = Util.Clamp((xDifShape + transformingShape.Width) - rect.Padding, 1, playground.Width);
+                int drawHeight = Util.Clamp((yDifShape + transformingShape.Height) - rect.Padding, 1, playground.Height);
+                int newX = transformingShape.X - (xDifShape - rect.Padding);
+                int newY = transformingShape.Y - (yDifShape - rect.Padding);
+
+                updateDrawingShape(newX, newY, drawWidth, drawHeight);
+                #endregion
             }
         }
         void ChangeWithTopRight(int mX, int mY)
@@ -227,6 +253,17 @@ namespace MonoPaint.ToolStrategy
 
                 //Update topLeft
                 rect.TopLeft.Y = endY - (rect.TopLeft.Height/2);
+                
+                #region Update Helper Rect
+                int xDifShape = endX - transformingShape.X; 
+                int yDifShape = -(endY - transformingShape.Y);
+                int drawWidth = Util.Clamp(xDifShape - rect.Padding, 1, playground.Width);
+                int drawHeight = Util.Clamp((yDifShape + transformingShape.Height) - rect.Padding, 1, playground.Height);
+                int newX = transformingShape.X;
+                int newY = transformingShape.Y - (yDifShape - rect.Padding);
+
+                updateDrawingShape(newX, newY, drawWidth, drawHeight);
+                #endregion
             }
         }
         void ChangeWithBottomRight(int mX, int mY)
@@ -255,6 +292,15 @@ namespace MonoPaint.ToolStrategy
 
                 //Update topRight
                 rect.TopRight.X = endX - (rect.TopRight.Width/2);
+                
+                #region Update Helper Rect
+                int xDifShape = endX - transformingShape.X; 
+                int yDifShape = endY - transformingShape.Y;
+                int newWidth = Util.Clamp(xDifShape - rect.Padding, 1, playground.Width);
+                int newHeight = Util.Clamp(yDifShape - rect.Padding, 1, playground.Height);
+
+                updateDrawingShape(transformingShape.X, transformingShape.Y, newWidth, newHeight);
+                #endregion
             }
         }
         void ChangeWithBottomLeft(int mX, int mY)
@@ -287,7 +333,27 @@ namespace MonoPaint.ToolStrategy
 
                 //Update topRight
                 rect.TopLeft.X = endX - (rect.TopRight.Width/2);
+                
+                #region Update Helper Rect
+                int xDifShape = -(endX - transformingShape.X); 
+                int yDifShape = endY - (transformingShape.Y);
+                int newWidth = Util.Clamp((xDifShape + transformingShape.Width) - rect.Padding, 1, playground.Width);
+                int newHeight = Util.Clamp(yDifShape - rect.Padding, 1, playground.Height);
+                int newX = transformingShape.X - (xDifShape - rect.Padding);
+                int newY = transformingShape.Y;
+
+                updateDrawingShape(newX, newY, newWidth, newHeight);
+                #endregion
             }
+        }
+
+        void updateDrawingShape(int iX, int iY, int iWidth, int iHeight)
+        {
+            drawingShape.X = iX;
+            drawingShape.Y = iY;
+            drawingShape.Width = iWidth;
+            drawingShape.Height = iHeight; 
+            drawingShape.LoadWhileDrawing();
         }
     }
 }
