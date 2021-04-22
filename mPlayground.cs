@@ -166,7 +166,7 @@ namespace MonoPaint
         {
             var filePath = string.Empty;
 
-
+#if Windows
             if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows)){
 
                 using (OpenFileDialog openFileDialog = new OpenFileDialog())
@@ -181,9 +181,9 @@ namespace MonoPaint
                         filePath = openFileDialog.FileName;
                     }
                 }
-            }else{
+#elif OSX
                 filePath = "Saves/save.mp";
-            }
+#endif
 
             if(filePath != string.Empty){
                 List<aShape> loadedShapes = ShapeSerializer.Deserialize(filePath).Result;
