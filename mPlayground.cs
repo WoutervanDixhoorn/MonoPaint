@@ -4,8 +4,11 @@ using System.Collections.Generic;
 using System;
 using System.IO;
 using System.Security;
+//TODO: Move File Dialog to abstacted class
 #if Windows
 using System.Windows.Forms;
+#elif OSX
+using AppKit;
 #endif
 
 using Microsoft.Xna.Framework;
@@ -149,6 +152,7 @@ namespace MonoPaint
                 }
 #elif OSX
                 filePath = "Saves/save.mp";
+                var dlg = NSOpenPanel.OpenPanel; //NOTE: Test for mac, if not compiling remove
 #endif
 
             if(filePath != string.Empty){

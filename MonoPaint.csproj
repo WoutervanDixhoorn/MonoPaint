@@ -14,6 +14,11 @@
   <PropertyGroup Condition="'$(IsOSX)'=='true'">
     <DefineConstants>OSX</DefineConstants>
   </PropertyGroup>
+  <ItemGroup Condition="'$(IsOSX)'=='true'"> <!-- NOTE: Test -->
+    <Reference Include="Xamarin.Mac">
+      <HintPath>/Library/Frameworks/Xamarin.Mac.framework/Versions/Current//lib/x86_64/full/Xamarin.Mac</HintPath>
+    </Reference>
+  </ItemGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
