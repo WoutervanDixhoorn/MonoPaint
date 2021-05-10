@@ -130,7 +130,6 @@ namespace MonoPaint
             openButton.Color = Color.LightBlue;
             openButton.BorderColor = Color.LightGreen;
             openButton.OnPress =  loadPlayground;
-
         }
 
         void savePlayground()
@@ -152,7 +151,21 @@ namespace MonoPaint
                 }
 #elif OSX
                 filePath = "Saves/save.mp";
-                var dlg = NSOpenPanel.OpenPanel; //NOTE: Test for mac, if not compiling remove
+                let myFiledialog = NSOpenPanel()
+                myFiledialog.prompt = "Select path"
+                myFiledialog.worksWhenModal = true
+                myFiledialog.allowsMultipleSelection = false
+                myFiledialog.canChooseDirectories = true
+                myFiledialog.canChooseFiles = false
+                myFiledialog.resolvesAliases = true
+                myFiledialog.beginSheetModalForWindow(window, completionHandler: { num in
+                    if num == NSModalResponseOK {
+                        let path = myFiledialog.URL
+                        print(path)
+                    } else {
+                        print("nothing chosen")
+                    }
+                });//NOTE: Test for mac, if not compiling remove
 #endif
 
             if(filePath != string.Empty){
