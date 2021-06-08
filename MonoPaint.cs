@@ -11,6 +11,8 @@ namespace MonoPaint
 {
     public class MonoPaint : Game
     {
+        public static GameWindow gw;
+
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
 
@@ -19,8 +21,8 @@ namespace MonoPaint
         //PaintVars
         mPlayground monoPlayground;
 
-        //UI
-        UIButton testButton;
+        //Textbox test
+        UITextBox textBox;
 
         public MonoPaint()
         {
@@ -37,22 +39,17 @@ namespace MonoPaint
             graphics.PreferredBackBufferHeight = (int)baseScreenSize.Y;
             graphics.ApplyChanges();
 
+            gw = Window;
+            
             monoPlayground = new mPlayground();
 
-
-
             base.Initialize();
-        }
-
-        void onTestPress()
-        {
-            Console.WriteLine("Pressed Draw Button!!");
         }
 
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            
+
             monoPlayground.Load();
         }
 
@@ -73,5 +70,15 @@ namespace MonoPaint
 
             base.Draw(gameTime);
         }
+
+        public static void RegisterFocusedButtonForTextInput(System.EventHandler<TextInputEventArgs> method)
+        {
+            gw.TextInput += method;
+        }
+        public static void UnRegisterFocusedButtonForTextInput(System.EventHandler<TextInputEventArgs> method)
+        {
+            gw.TextInput -= method;
+        }   
+
     }
 }

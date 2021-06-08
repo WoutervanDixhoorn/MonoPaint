@@ -2,10 +2,10 @@ using System.Numerics;
 using System;
 namespace MonoPaint.Shapes
 {
-    public class Ellipse
+    public struct Ellipse
     {
-        int width;
-        int height;
+        public int width;
+        public int height;
 
         int padding;
 

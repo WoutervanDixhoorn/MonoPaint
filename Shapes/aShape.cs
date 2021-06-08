@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 using MonoPaint.Shapes;
+using MonoPaint.Graphics;
 
 namespace MonoPaint
 {
@@ -32,6 +33,8 @@ namespace MonoPaint
     {   
         public string ShapeName;
 
+        protected iShapeDrawer shapeDrawer;
+
         protected Texture2D shapeTexture;
         protected Color[] shapeData;
         protected Color color;
@@ -53,83 +56,89 @@ namespace MonoPaint
         protected bool hovered;
         protected bool drawBorder;
 
-        public Color Color{
+        public virtual Color Color{
             set { color = value; }
             get { return color;}
         }
     
-        public Color BorderColor{
+        public virtual Color BorderColor{
             set { borderColor = value; }
         }
 
-        public int Width
+        public virtual int Width
         {
             get { return width; }
             set { width = value; }
         }
 
-        public int Height
+        public virtual int Height
         {
             get { return height; }
             set { height = value; }
         }
 
-        public int BorderSize
+        public virtual int BorderSize
         {
             get { return borderSize; }
             set { borderSize = value; }
         }
 
-        public int X
+        public virtual Vector2 Position
+        {
+            get { return position; }
+            set { position = value; }
+        }
+
+        public virtual int X
         {
             get { return (int)position.X; }
             set { position.X = value; }
         }
 
-        public int Y
+        public virtual int Y
         {
             get { return (int)position.Y; }
             set { position.Y = value; }
         }
 
-        public Vector2 TopLeft
+        public virtual Vector2 TopLeft
         {
             get { return new Vector2(X, Y); }
         }
 
-        public Vector2 TopRight
+        public virtual Vector2 TopRight
         {
             get { return new Vector2(X + width, Y);}
         }
 
-        public Vector2 BottomLeft
+        public virtual Vector2 BottomLeft
         {
             get { return new Vector2(X, Y + height); }
         }
 
-        public Vector2 BottomRight
+        public virtual Vector2 BottomRight
         {
             get { return new Vector2(X + width, Y + height); }
         }
 
-        public SelectionRectangle SelectionRect
+        public virtual SelectionRectangle SelectionRect
         {
             get { return selectionRect; }
         }
 
-        public bool Visible
+        public virtual bool Visible
         {
             get { return visible; }
             set { visible = value;}
         }
 
-        public bool Selected
+        public virtual bool Selected
         {
             get { return selected; }
             set { selected = value; }
         }
 
-        public bool Transforming
+        public virtual bool Transforming
         {
             get { return transforming; }
             set { transforming = value;
@@ -138,19 +147,24 @@ namespace MonoPaint
                }}
         }
 
-        public bool Hovered
+        public virtual bool Hovered
         {
             get { return hovered; }
             set { hovered = value; }
         }
 
-        public bool DrawBorder
+        public virtual bool DrawBorder
         {
             get { return drawBorder; }
             set { drawBorder = value; }
         }
 
-        public aShape(int iWidth, int iHeight, Color? iColor = null)
+        public virtual iShapeDrawer ShapeDrawer
+        {
+            get { return shapeDrawer; }
+        }
+
+        public aShape(int iWidth = 0, int iHeight = 0, Color? iColor = null)
         {
             if(iWidth <= 0 || iHeight <= 0)
             {
@@ -167,7 +181,8 @@ namespace MonoPaint
             color = iColor ?? Color.HotPink;
             borderColor = Color.Black;
         }
-        public bool Intersects(aShape iShape)
+
+        public virtual bool Intersects(aShape iShape)
         {
             if((  TopLeft.X  >  iShape.BottomRight.X )||(BottomRight.X  <  iShape.TopLeft.X)
             ||(TopLeft.Y > iShape.BottomRight.Y )||(BottomRight.Y  <  iShape.TopLeft.Y))
@@ -177,33 +192,68 @@ namespace MonoPaint
             return true;
         }
         public abstract bool Contains(int iX, int iY);
-        public abstract void Load();
+
+        public virtual void Load()
+        {
+            shapeTexture = new Texture2D(ContentHandler.Instance.Graphics, width, height, false, SurfaceFormat.Color);
+            shapeData = shapeDrawer.GetData(width, height, color);            
+            if(shapeData == null)
+            {
+                //Nothing ToDo
+            }else{
+                shapeTexture.SetData(shapeData);
+
+                if(drawBorder){
+                    int borderWidth = width+(borderSize*2), borderHeight = height+(borderSize*2);
+                    borderTexture = new Texture2D(ContentHandler.Instance.Graphics, borderWidth, borderHeight, false, SurfaceFormat.Color);
+                    borderTexture.SetData(shapeDrawer.GetBorderData(width, height, borderSize, borderColor));
+                }
+
+                if(transforming)
+                {
+                    GenerateTransformRect();
+                }
+            }
+        }
+
+        public virtual void Unload()
+        {
+            shapeData = null;
+            borderData = null;
+
+            if(shapeTexture != null)
+                shapeTexture.Dispose();
+            if(borderTexture != null)
+                borderTexture.Dispose();
+        }
+
         public abstract void LoadWhileDrawing(); //NOTE: This is temp code for drawing faster ellipse
-        public abstract void Unload();
-        public void Draw(SpriteBatch iSpriteBatch, float iAlpha = 1)
+       
+        public virtual void Draw(SpriteBatch iSpriteBatch, float iAlpha = 1)
         {
             if(!visible)
                 return;
 
             if(shapeTexture == null)
             {
-                throw new System.NullReferenceException("shapeTexture is null");
+                //Nothing ToDo
+            }else{
+
+                if(hovered || selected)
+                    iAlpha = 0.5f;
+
+                iSpriteBatch.Draw(shapeTexture, position, Color.White * iAlpha); 
+                if(drawBorder){
+                    if(borderTexture == null)
+                        Load();
+                    iSpriteBatch.Draw(borderTexture, position - new Vector2(borderSize), Color.White * iAlpha); 
+                }
+
+                if(transforming)
+                {
+                    selectionRect.Draw(iSpriteBatch);
+                }   
             }
-
-            if(hovered || selected)
-                iAlpha = 0.5f;
-
-            iSpriteBatch.Draw(shapeTexture, position, Color.White * iAlpha); 
-            if(drawBorder){
-                if(borderTexture == null)
-                    Load();
-                iSpriteBatch.Draw(borderTexture, position - new Vector2(borderSize), Color.White * iAlpha); 
-            }
-
-            if(transforming)
-            {
-                selectionRect.Draw(iSpriteBatch);
-            }   
         }
 
         /*private funcs*/

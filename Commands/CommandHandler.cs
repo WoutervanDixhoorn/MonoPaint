@@ -5,7 +5,7 @@ namespace MonoPaint.Commands
 {
     public class CommandHandler
     {
-        
+
         List<ICommand> recentCommands;
         
         List<ICommand> undidCommands;

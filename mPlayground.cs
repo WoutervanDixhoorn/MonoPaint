@@ -22,6 +22,7 @@ using MonoPaint.Commands;
 using MonoPaint.Graphics;
 using MonoPaint.ToolStrategy;
 using MonoPaint.FileParsing;
+using MonoPaint.Decorator;
 
 namespace MonoPaint
 {
@@ -117,7 +118,7 @@ namespace MonoPaint
             transformButton.Color = Color.LightBlue;
             transformButton.BorderColor = Color.LightGreen;
             transformButton.OnPress = () => { shapeTool.Reset(); shapeTool = new ShapeTransformTool(this);
-                                            drawButton.Border = false; selectButton.Border = false; moveButton.Border = false; transformButton.Border = true;};
+                                            drawButton.Border = false; selectButton.Border = false; moveButton.Border = false; transformButton.Border = true;};            
 
             saveButton = new UIButton(1195, 675, 80, 40);
             saveButton.Text = "Save";

@@ -1,3 +1,4 @@
+using System.Net.NetworkInformation;
 using System.Collections.Generic;
 using System;
 
@@ -8,6 +9,8 @@ using Microsoft.Xna.Framework.Input;
 using Input;
 using MonoPaint.Commands;
 using MonoPaint.Shapes;
+using MonoPaint.Decorator;
+using MonoPaint.UI;
 
 namespace MonoPaint.ToolStrategy
 {
@@ -17,6 +20,8 @@ namespace MonoPaint.ToolStrategy
         mPlayground playground;
 
         mRectangle selectionRect;
+
+        UITextBox textBox;
 
         public ShapeSelectTool(mPlayground iPlayground)
         {
@@ -33,6 +38,11 @@ namespace MonoPaint.ToolStrategy
         bool selecting = false;
         public void Update()
         {
+            if(textBox != null)
+            {
+                textBox.Update();
+            }
+
             /*TODO: Move to 'UI' or/and keyboard shortcut*/
             if(InputManger.IsKeyPressed(Keys.B))
             {
@@ -91,9 +101,22 @@ namespace MonoPaint.ToolStrategy
                 }
             }
 
-            
+            //For adding text
+            if(InputManger.IsKeyPressed(Keys.Up))
+            {
+                AddText(TextPos.Top);
+            }else if(InputManger.IsKeyPressed(Keys.Left))
+            {
+                AddText(TextPos.Left);
+            }else if(InputManger.IsKeyPressed(Keys.Down))
+            {
+                AddText(TextPos.Bottom);
+            }else if(InputManger.IsKeyPressed(Keys.Right))
+            {
+                AddText(TextPos.Right);
+            }
 
-            if(InputManger.IsKeyPressed(Keys.Delete) || InputManger.IsKeyPressed(Keys.EraseEof))
+            if(InputManger.IsKeyPressed(Keys.Delete) || InputManger.IsKeyPressed(Keys.Back))
             {
                 deleteShapes();
             }
@@ -131,6 +154,11 @@ namespace MonoPaint.ToolStrategy
 
         public void Draw(SpriteBatch iSpriteBatch)
         {
+            if(textBox != null)
+            {
+                textBox.Draw(iSpriteBatch);
+            }
+
             if(leftClicked && InputManger.IsKeyDown(Keys.LeftControl))
                 selectionRect.Draw(iSpriteBatch, 0.8f);
         }
@@ -143,6 +171,48 @@ namespace MonoPaint.ToolStrategy
                     shape.Selected = false;
                 });
             }
+        }
+        
+        public void AddText(TextPos textPos)
+        {
+            if(getFirstSelectedShape() == null)
+                return;
+
+            Vector2 pos = getFirstSelectedShape().Position;
+
+            textBox = UIBasics.BasicTextbox((int)pos.X + 3, (int)pos.Y - 35, (s) => {
+                addText(s, textPos);
+            });
+        }
+
+        void addText(string text, TextPos textPos)
+        {
+            foreach(mCanvas c in playground.Canvases)
+            {
+                foreach(aShape shape in c.Shapes){
+                    if(shape.Selected){
+                        playground.ExecuteCommand(new AddTextCommand(playground, shape, text, textPos));
+                        break;
+                    }  
+                }     
+            }
+
+            textBox = null;
+        }
+
+        aShape getFirstSelectedShape()
+        {
+            foreach(mCanvas c in playground.Canvases)
+            {
+                foreach(aShape s in c.Shapes)
+                {
+                    if(s.Selected)
+                    {
+                        return s;
+                    }
+                }
+            }
+            return null;
         }
 
         void deleteShapes()

@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using MonoPaint.Graphics;
+
 namespace MonoPaint
 {
     public class mRectangle : aShape
@@ -11,6 +13,8 @@ namespace MonoPaint
         base(iWidth, iHeight, iColor)
         {
             ShapeName = "rectangle";
+
+            shapeDrawer = mRectangleDrawer.Instance;
         }
 
         public override bool Contains(int iX, int iY)
@@ -21,43 +25,6 @@ namespace MonoPaint
                 return true;
             }
             return false;
-        }
-
-        public override void Load()
-        {
-            shapeTexture = new Texture2D(ContentHandler.Instance.Graphics, width, height); 
-            shapeData = new Color[(shapeTexture.Width * shapeTexture.Height)];
-
-            for(int i = 0; i < shapeData.Length; i++)
-                shapeData[i] = color;
-
-            shapeTexture.SetData(shapeData);
-
-            //Load border
-            if(drawBorder){
-                int borderWidth = width+(borderSize*2), borderHeight = height+(borderSize*2);
-                borderData = new Color[((borderWidth)*(borderHeight))];
-
-                for(int i = 0; i < borderHeight; i++){
-                    for(int j = 0; j < borderWidth; j++){
-                        if(j >= i*borderWidth - borderSize || j < borderSize){
-                            borderData[i*borderWidth+j] = borderColor;
-                        }else if(j >= borderWidth - borderSize){
-                            borderData[i*borderWidth+j] = borderColor;
-                        }else if(i >= borderHeight - borderSize || i < borderSize){
-                            borderData[i*borderWidth+j] = borderColor;
-                        }                 
-                    }
-                }
-                
-                borderTexture = new Texture2D(ContentHandler.Instance.Graphics, borderWidth, borderHeight); 
-                borderTexture.SetData(borderData);
-            }
-
-            if(transforming)
-            {
-                GenerateTransformRect();
-            }
         }
 
         public override void LoadWhileDrawing()
@@ -78,14 +45,6 @@ namespace MonoPaint
             }
 
             shapeTexture.SetData(shapeData);
-        }
-
-        public override void Unload()
-        {
-            shapeData = null;
-
-            if(shapeTexture != null)
-                shapeTexture.Dispose();
         }
 
         public override string ToString()
