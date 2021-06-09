@@ -23,6 +23,8 @@ namespace MonoPaint.ToolStrategy
 
         UITextBox textBox;
 
+        bool typing;
+
         public ShapeSelectTool(mPlayground iPlayground)
         {
             playground = iPlayground;
@@ -32,6 +34,8 @@ namespace MonoPaint.ToolStrategy
             selectionRect.DrawBorder = true;
             selectionRect.Selected = true;
             selectionRect.Load();
+
+            typing = false;
         }
 
         bool leftClicked = false;
@@ -101,22 +105,29 @@ namespace MonoPaint.ToolStrategy
                 }
             }
 
-            //For adding text
-            if(InputManger.IsKeyPressed(Keys.Up))
-            {
-                AddText(TextPos.Top);
-            }else if(InputManger.IsKeyPressed(Keys.Left))
-            {
-                AddText(TextPos.Left);
-            }else if(InputManger.IsKeyPressed(Keys.Down))
-            {
-                AddText(TextPos.Bottom);
-            }else if(InputManger.IsKeyPressed(Keys.Right))
-            {
-                AddText(TextPos.Right);
+
+            if(!typing){
+                //For adding text
+                if(InputManger.IsKeyPressed(Keys.Up))
+                {
+                    typing = true;
+                    AddText(TextPos.Top);
+                }else if(InputManger.IsKeyPressed(Keys.Left))
+                {
+                    typing = true;
+                    AddText(TextPos.Left);
+                }else if(InputManger.IsKeyPressed(Keys.Down))
+                {
+                    typing = true;
+                    AddText(TextPos.Bottom);
+                }else if(InputManger.IsKeyPressed(Keys.Right))
+                {
+                    typing = true;
+                    AddText(TextPos.Right);
+                }
             }
 
-            if(InputManger.IsKeyPressed(Keys.Delete) || InputManger.IsKeyPressed(Keys.Back))
+            if(!typing && (InputManger.IsKeyPressed(Keys.Delete) || InputManger.IsKeyPressed(Keys.Back)))
             {
                 deleteShapes();
             }
@@ -175,12 +186,15 @@ namespace MonoPaint.ToolStrategy
         
         public void AddText(TextPos textPos)
         {
-            if(getFirstSelectedShape() == null)
+            if(getFirstSelectedShape() == null){
+                typing = false;
                 return;
+            }
 
             Vector2 pos = getFirstSelectedShape().Position;
 
             textBox = UIBasics.BasicTextbox((int)pos.X + 3, (int)pos.Y - 35, (s) => {
+                typing = false;
                 addText(s, textPos);
             });
         }

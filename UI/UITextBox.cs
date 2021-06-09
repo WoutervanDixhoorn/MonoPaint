@@ -96,7 +96,13 @@ namespace MonoPaint.UI
         {
             var k = e.Key;
             var c = e.Character;
-            typedText.Append(c);
+
+            if(k == Keys.Back)
+            {
+                typedText.Remove(typedText.Length - 1, 1);
+            }else{
+                typedText.Append(c);
+            }
         }
 
         public void Draw(SpriteBatch iSpriteBatch)

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 
 using MonoPaint.Shapes;
 using MonoPaint.Graphics;
+using MonoPaint.CompositeVisitor;
 
 namespace MonoPaint.Decorator
 {
@@ -124,6 +125,11 @@ namespace MonoPaint.Decorator
         public override bool Contains(int iX, int iY)
         {
             return decoratedShape.Contains(iX, iY);
+        }
+
+        public override void Accept(IShapeVisitor shapeVisitor)
+        {
+            shapeVisitor.Visit(decoratedShape);
         }
 
     }

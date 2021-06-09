@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 using MonoPaint.Graphics;
+using MonoPaint.CompositeVisitor;
 
 namespace MonoPaint
 {
@@ -45,6 +46,11 @@ namespace MonoPaint
             }
 
             shapeTexture.SetData(shapeData);
+        }
+
+        public override void Accept(IShapeVisitor shapeVisitor)
+        {
+            shapeVisitor.Visit(this);
         }
 
         public override string ToString()

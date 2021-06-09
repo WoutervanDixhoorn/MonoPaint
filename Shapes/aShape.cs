@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 
 using MonoPaint.Shapes;
 using MonoPaint.Graphics;
+using MonoPaint.CompositeVisitor;
 
 namespace MonoPaint
 {
@@ -164,7 +165,7 @@ namespace MonoPaint
             get { return shapeDrawer; }
         }
 
-        public aShape(int iWidth = 0, int iHeight = 0, Color? iColor = null)
+        public aShape(int iWidth = 1, int iHeight = 1, Color? iColor = null)
         {
             if(iWidth <= 0 || iHeight <= 0)
             {
@@ -298,5 +299,7 @@ namespace MonoPaint
             selectionRect.SelectRect = rect;
 
         }
+    
+        public abstract void Accept(IShapeVisitor shapeVisitor);
     }
 }

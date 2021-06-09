@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 using Input;
 using MonoPaint.Shapes;
+using MonoPaint.CompositeVisitor;
 
 namespace MonoPaint
 {
@@ -26,6 +27,18 @@ namespace MonoPaint
 
             width = iWidth;
             height = iHeight;
+
+            //Test composite
+            mRectangle rect1 = new mRectangle(30, 30, Color.Blue);
+            rect1.X = 100; rect1.Y = 100;
+            mRectangle rect2 = new mRectangle(40, 50, Color.Aqua);
+            rect2.X = 150; rect2.Y = 100;
+
+            ShapeComposite group = new ShapeComposite();
+            group.Add(rect1); group.Add(rect2);
+            shapes.Add(group);
+
+            group.Accept(new ShapeVisitorMove(400, 100));
 
             Console.WriteLine("Initialized canvas with: " + shapes.Count + " shapes");
         }
