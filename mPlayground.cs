@@ -151,22 +151,7 @@ namespace MonoPaint
                     }
                 }
 #elif OSX
-                filePath = "Saves/save.mp";
-                let myFiledialog = NSOpenPanel()
-                myFiledialog.prompt = "Select path"
-                myFiledialog.worksWhenModal = true
-                myFiledialog.allowsMultipleSelection = false
-                myFiledialog.canChooseDirectories = true
-                myFiledialog.canChooseFiles = false
-                myFiledialog.resolvesAliases = true
-                myFiledialog.beginSheetModalForWindow(window, completionHandler: { num in
-                    if num == NSModalResponseOK {
-                        let path = myFiledialog.URL
-                        print(path)
-                    } else {
-                        print("nothing chosen")
-                    }
-                });//NOTE: Test for mac, if not compiling remove
+        //NOTE: Nothing osx api not available!!
 #endif
 
             if(filePath != string.Empty){
