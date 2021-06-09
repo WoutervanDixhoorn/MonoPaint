@@ -59,5 +59,10 @@ namespace MonoPaint.Decorator
             iSpriteBatch.DrawString(font, rightText, new Vector2(X + Width + rightDim.Y, Y), Color.Black, (float)Math.PI/2, new Vector2(0,0), 1, 0, 0);
         }
 
+        public string GetText(TextPos textPos)
+        {
+            return topText;
+        }
+
     }
 }
