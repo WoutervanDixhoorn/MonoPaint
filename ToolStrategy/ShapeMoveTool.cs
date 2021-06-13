@@ -17,8 +17,9 @@ namespace MonoPaint.ToolStrategy
         mPlayground playground;
 
         aShape movingShape;
-
         aShape drawingShape;
+
+        ShapeComposite group = null;
 
         public ShapeMoveTool(mPlayground iPlayground)
         {
@@ -47,11 +48,26 @@ namespace MonoPaint.ToolStrategy
                     //Temp shape for quick acces
                     aShape s = movingShape;
 
+                    
+                    if(s.GetType() == typeof(ShapeComposite)){
+                        group = (ShapeComposite)s;
+                        movingShape = group;
+                    }
+                        
+
                     //Setting up a temp shape to draw while moving
-                    if(movingShape.ShapeName == "rectangle")
+                    if(s.ShapeName == "rectangle")
                         drawingShape = new mRectangle(s.Width, s.Height, s.Color);
-                    else
+                    else if(s.ShapeName == "ellipse")
                         drawingShape = new mEllipse(s.Width, s.Height, s.Color);
+                    else if(s.ShapeName == "group")
+                    {
+                        ShapeComposite drawingGroup =  new ShapeComposite();
+                        drawingGroup.Add(group.GetChildren());
+                        drawingGroup.Visible = true;
+                        drawingShape = drawingGroup;
+                        drawingShape.Visible = true;
+                    }
                     
                     drawingShape.X = s.X;
                     drawingShape.Y = s.Y;
@@ -71,8 +87,9 @@ namespace MonoPaint.ToolStrategy
             }else if(!leftClicked && moving)
             {
                 moving = false;
-                
-                playground.ExecuteCommand(new MoveCommand(movingShape, drawingShape.X, drawingShape.Y));
+
+                playground.ExecuteCommand(new MoveCommand(group != null ? group : movingShape, drawingShape.X, drawingShape.Y));
+
                 movingShape.Visible = true;
             }
 

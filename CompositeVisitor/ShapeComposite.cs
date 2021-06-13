@@ -7,22 +7,117 @@ using MonoPaint.CompositeVisitor;
 
 namespace MonoPaint {
 
-    class ShapeComposite : aShape 
+    public class ShapeComposite : aShape 
     {
+        public override int X
+        {
+            get { return shapes[0].X; }
+            set
+            {
+                int oldX = X;
+                int deltaX = value - oldX;
+                shapes[0].X = value;
+                for(int i = 1; i < shapes.Count; i++)
+                {
+                    shapes[i].X += deltaX;
+                }
+            }
+        }
+
+        public override int Y
+        {
+            get { return shapes[0].Y; }
+            set 
+            {  
+                int oldY = Y;
+                int deltaY = value - oldY;
+                shapes[0].Y = value;
+                for(int i = 1; i < shapes.Count; i++)
+                {
+                    shapes[i].Y += deltaY;
+                }
+            }
+        }
+
+        public override int Width 
+        {
+             get { return (int)dimensions.X; }
+             set { setWidth(value); }
+        }
+
+        public override int Height 
+        {
+             get { return (int)dimensions.Y; }
+             set { setHeight(value); }
+        }
 
         //TODO: Extend functionality and make it funciton like a whole shape
+        public override bool Selected
+        {
+            get { return shapes[0].Selected; }
+            set { foreach(aShape s in shapes){ s.Selected = value; } }
+        }
+
+        public override bool Hovered
+        {
+            get { return shapes[0].Hovered; }
+            set { foreach(aShape s in shapes){ s.Hovered = value; } }
+        }
+
+        public override bool DrawBorder
+        {
+            get { return shapes[0].DrawBorder; }
+            set { foreach(aShape s in shapes){ s.DrawBorder = value; } }
+        }
+
+        
+        public override bool Visible
+        {
+            get { return shapes[0].Visible; }
+            set { foreach(aShape s in shapes){ s.Visible = value; } }
+        }
+
+        public override Color Color{
+            get { return shapes[0].Color; }
+            set { foreach(aShape s in shapes){ s.Color = value; } }
+        }
+    
+        public override Color BorderColor{
+            set { foreach(aShape s in shapes){ s.BorderColor = value; } }
+        }
+        
+        public override int BorderSize
+        {
+            get { return shapes[0].BorderSize; }
+            set { foreach(aShape s in shapes){ s.BorderSize = value; } }
+        }
 
         List<aShape> shapes;
         
-        public ShapeComposite(){
+        Vector2 dimensions;
 
+        public ShapeComposite()
+        {
+            ShapeName = "group";        
             shapes = new List<aShape>();
-
         }
+
+        public List<aShape> GetChildren()
+        {
+            return shapes;
+        }
+
 
         public void Add(aShape child){
             shapes.Add(child);
+            dimensions = calculateDimensions();
         }
+
+        public void Add(List<aShape> children){
+            shapes.AddRange(children);
+            dimensions = calculateDimensions();
+        }
+
 
         public void Remove(aShape child){
 
@@ -35,6 +130,7 @@ namespace MonoPaint {
             foreach(aShape child in shapes){
                 child.Load();
             }
+            dimensions = calculateDimensions();
         }
 
 
@@ -47,18 +143,20 @@ namespace MonoPaint {
 
         public override void Draw(SpriteBatch iSpriteBatch, float iAlpha = 1)
         {
+            calculateDimensions();
             foreach(aShape child in shapes){
+                child.Visible = true; //NOTE: Here to quickly fix bug with groups moving
                 child.Draw(iSpriteBatch);
             }
         }
 
         public override bool Contains(int iX, int iY)
         {
-            if(iX > X && iX <  X + Width &&
-                iY > Y &&  iY < Y + Height)
-            {
-                return true;
+            foreach(aShape child in shapes){
+                if(child.Contains(iX, iY))
+                    return true;
             }
+
             return false;
         }
 
@@ -70,13 +168,58 @@ namespace MonoPaint {
 
         public override void Accept(IShapeVisitor shapeVisitor)
         {
-            foreach(aShape s in shapes)
-            {
-                shapeVisitor.Visit(s);
-            }   
+            shapeVisitor.Visit(this);
         }
 
+        void setWidth(int newWidth)
+        {
+            int xOffset = (newWidth - Width)/2;
+            shapes[0].Width += xOffset;
+            for(int i = 1; i < shapes.Count; i++)
+            {
+                shapes[i].Width += xOffset;
+                shapes[i].X += xOffset;
+            }
+        }
 
+        void setHeight(int newHeight)
+        {
+            int yOffset = (newHeight - Height)/2;
+            shapes[0].Height += yOffset;
+            for(int i = 1; i < shapes.Count; i++)
+            {
+                shapes[i].Height += yOffset;
+                shapes[i].Y += yOffset;
+            }
+        }
+
+        Vector2 calculateDimensions()
+        {
+            int leftX = int.MaxValue;
+            int topY = int.MaxValue;
+
+            int rightX = int.MinValue;
+            int bottomY = int.MinValue;
+
+            foreach(aShape s in shapes)
+            {
+                if(s.X < leftX)
+                    leftX = s.X;
+                if(s.X + s.Width > rightX)
+                    rightX = s.X + s.Width;
+                
+                if(s.Y < topY)
+                    topY = s.Y;
+                if(s.Y + s.Height > bottomY)
+                    bottomY = s.Y + s.Height;
+            }
+
+            int width = rightX - leftX;
+            int height = bottomY - topY;
+
+            return new Vector2(width, height);
+        }
+        
     }
 
 }

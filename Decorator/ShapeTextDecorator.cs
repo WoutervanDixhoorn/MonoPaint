@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using MonoPaint.CompositeVisitor;
 
 namespace MonoPaint.Decorator
 {
@@ -62,6 +63,11 @@ namespace MonoPaint.Decorator
         public string GetText(TextPos textPos)
         {
             return topText;
+        }
+
+        public override void Accept(IShapeVisitor shapeVisitor)
+        {
+            shapeVisitor.Visit(this);
         }
 
     }

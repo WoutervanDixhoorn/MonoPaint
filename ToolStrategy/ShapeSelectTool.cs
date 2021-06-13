@@ -191,7 +191,7 @@ namespace MonoPaint.ToolStrategy
                 return;
             }
 
-            Vector2 pos = getFirstSelectedShape().Position;
+            Vector2 pos = new Vector2(getFirstSelectedShape().X, getFirstSelectedShape().Y);
 
             textBox = UIBasics.BasicTextbox((int)pos.X + 3, (int)pos.Y - 35, (s) => {
                 typing = false;

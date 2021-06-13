@@ -1,4 +1,5 @@
 using MonoPaint.Shapes;
+using MonoPaint.Decorator;
 
 namespace MonoPaint.CompositeVisitor
 {
@@ -17,6 +18,18 @@ namespace MonoPaint.CompositeVisitor
         {
             shape.X += deltaX;
             shape.Y += deltaY;
+        }
+
+        public void Visit(ShapeTextDecorator shape)
+        {
+            shape.X += deltaX;
+            shape.Y += deltaY;
+        }
+
+        public void Visit(ShapeComposite group)
+        {
+            group.X += deltaX;
+            group.Y += deltaY;
         }
 
         public void Visit(mRectangle rectangle)

@@ -118,11 +118,11 @@ namespace MonoPaint.ToolStrategy
                             transformingShape.Transforming = true;
 
                             //Draw new size
-                            if(shape.ShapeName == "rectangle")
+                            if(shape.ShapeName == "ellipse")
                             {
-                                drawingShape = new mRectangle(transformingShape.Width, transformingShape.Height, transformingShape.Color);
+                                drawingShape = new mEllipse(transformingShape.Width, transformingShape.Height, transformingShape.Color);
                             }else{
-                                drawingShape = new mEllipse(transformingShape.Width, transformingShape.Height, transformingShape.Color);    
+                                drawingShape = new mRectangle(transformingShape.Width, transformingShape.Height, transformingShape.Color);    
                             }
                             
                             drawingShape.X = transformingShape.X;
