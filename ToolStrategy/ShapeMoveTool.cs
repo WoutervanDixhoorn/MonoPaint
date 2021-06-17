@@ -33,8 +33,8 @@ namespace MonoPaint.ToolStrategy
         int deltaX = 0, deltaY = 0;
         public void Update()
         {
-            int mX = InputManger.CurrentMouseState.X;
-            int mY = InputManger.CurrentMouseState.Y;
+            int mX = InputManager.CurrentMouseState.X;
+            int mY = InputManager.CurrentMouseState.Y;
 
             //Toggles there Hover var when mouse if over
             SelectShapes();
@@ -89,26 +89,29 @@ namespace MonoPaint.ToolStrategy
                 moving = false;
 
                 playground.ExecuteCommand(new MoveCommand(group != null ? group : movingShape, drawingShape.X, drawingShape.Y));
+                if(group != null){
+                    group = null;
+                }
 
                 movingShape.Visible = true;
             }
 
-            if(InputManger.IsPressed(MouseInput.LeftButton))
+            if(InputManager.IsPressed(MouseInput.LeftButton))
                 leftClicked = true;
 
-            if(InputManger.IsReleased(Input.MouseInput.LeftButton))
+            if(InputManager.IsReleased(Input.MouseInput.LeftButton))
                 leftClicked = false;
         }
 
         void SelectShapes()
         {
-            int mX = InputManger.CurrentMouseState.X;
-            int mY = InputManger.CurrentMouseState.Y;
+            int mX = InputManager.CurrentMouseState.X;
+            int mY = InputManager.CurrentMouseState.Y;
 
             foreach(mCanvas c in playground.Canvases)
             {
                 c.ForAllShapes((aShape shape) => {
-                    if(shape.Contains(InputManger.CurrentMouseState.X, InputManger.CurrentMouseState.Y)){
+                    if(shape.Contains(InputManager.CurrentMouseState.X, InputManager.CurrentMouseState.Y)){
                         shape.Hovered = true;
                     }else{
                         shape.Hovered = false;
@@ -119,8 +122,8 @@ namespace MonoPaint.ToolStrategy
 
         aShape getHovered()
         {
-            int mX = InputManger.CurrentMouseState.X;
-            int mY = InputManger.CurrentMouseState.Y;
+            int mX = InputManager.CurrentMouseState.X;
+            int mY = InputManager.CurrentMouseState.Y;
 
             List<aShape> returnShape = new List<aShape>();
 

@@ -55,7 +55,7 @@ namespace MonoPaint
 
         protected override void Update(GameTime gameTime)
         {
-            InputManger.Update();
+            InputManager.Update();
 
             monoPlayground.Update();
 

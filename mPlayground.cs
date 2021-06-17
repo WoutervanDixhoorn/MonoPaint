@@ -133,7 +133,7 @@ namespace MonoPaint
             openButton.OnPress =  loadPlayground;
         }
 
-        void savePlayground()
+        async void savePlayground()
         {
             var filePath = string.Empty;
 
@@ -158,14 +158,14 @@ namespace MonoPaint
                 int index = filePath.LastIndexOf('.');
                 if(filePath.Substring(index+1) == "mp")
                 {
-                    ShapeSerializer.Serialize(Shapes, filePath);
+                    await ShapeSerializer.Serialize(Shapes, filePath);
                 }else{
-                    ShapeSerializer.Serialize(Shapes, filePath + ".mp");
+                    await ShapeSerializer.Serialize(Shapes, filePath + ".mp");
                 }
             }    
         }
 
-        void loadPlayground()
+        async void loadPlayground()
         {
             var filePath = string.Empty;
 
@@ -191,7 +191,7 @@ namespace MonoPaint
 
             if(filePath != string.Empty){
                 if(File.Exists(filePath)){
-                List<aShape> loadedShapes = ShapeSerializer.Deserialize(filePath).Result;
+                List<aShape> loadedShapes = ShapeSerializer.Deserialize(filePath);
                 SetShapes(loadedShapes);
                 }else{
                     Console.WriteLine("You need to save before you can open the save");
@@ -313,15 +313,15 @@ namespace MonoPaint
 
         void UpdateInput()
         {
-            int mX = InputManger.CurrentMouseState.X;
-            int mY = InputManger.CurrentMouseState.Y;
+            int mX = InputManager.CurrentMouseState.X;
+            int mY = InputManager.CurrentMouseState.Y;
 
             //TODO: Maybe fix the whole microsoft.xna.. thing
             if(screen.IsOnScreen(mX, mY)){
-                if(InputManger.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftControl) && InputManger.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Z))
+                if(InputManager.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftControl) && InputManager.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Z))
                 {
                     commandHandler.Undo();
-                }else if(InputManger.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftControl) && InputManger.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Y))
+                }else if(InputManager.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftControl) && InputManager.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Y))
                 {
                     commandHandler.Redo();
                 }

@@ -65,12 +65,14 @@ namespace MonoPaint.CompositeVisitor
                 tabPre += "\t";
 
             output += tabPre + "group " + groupLevel + "\n";
-            groupLevel++;
             foreach(aShape s in group.GetChildren())
             {
+                if(s.GetType() == typeof(ShapeComposite))
+                    groupLevel++;
                 output +=  tabPre + "\t";
                 Visit(s);
             }
+            groupLevel = 0;
         }
 
         public void Visit(mRectangle rectangle)

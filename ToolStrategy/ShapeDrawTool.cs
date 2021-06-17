@@ -40,7 +40,7 @@ namespace MonoPaint.ToolStrategy
         public void Update()
         {
 
-            if(InputManger.IsKeyPressed(Keys.Q))
+            if(InputManager.IsKeyPressed(Keys.Q))
             {
                 if(curShape == eShape.Rect)
                 {
@@ -50,7 +50,7 @@ namespace MonoPaint.ToolStrategy
                 }
             }            
 
-            if(!leftClicked && InputManger.IsPressed(MouseInput.LeftButton))
+            if(!leftClicked && InputManager.IsPressed(MouseInput.LeftButton))
             {   
                 if(curShape == eShape.Rect)
                     currentShape = new mRectangle(1,1, Color.Red);
@@ -58,8 +58,8 @@ namespace MonoPaint.ToolStrategy
                 if(curShape == eShape.Ellps)
                     currentShape = new mEllipse(1,1, Color.Red);
 
-                xPos1 = InputManger.CurrentMouseState.X;
-                yPos1 = InputManger.CurrentMouseState.Y;
+                xPos1 = InputManager.CurrentMouseState.X;
+                yPos1 = InputManager.CurrentMouseState.Y;
 
                 currentShape.X = xPos1; currentShape.Y = yPos1;
                 currentShape.LoadWhileDrawing();
@@ -67,7 +67,7 @@ namespace MonoPaint.ToolStrategy
                 drawing = true;
 
                 Console.WriteLine("Start drawing at: [" + xPos1 + " | " + yPos1 + "]");
-            }else if(leftClicked && InputManger.IsReleased(MouseInput.LeftButton))
+            }else if(leftClicked && InputManager.IsReleased(MouseInput.LeftButton))
             {
                 currentShape.Width = Util.Clamp(rWidth, 1, playground.Width);
                 currentShape.Height = Util.Clamp(rHeight, 1, playground.Height);
@@ -80,8 +80,8 @@ namespace MonoPaint.ToolStrategy
                 Console.WriteLine("Added: " + currentShape.ToString());
             }else if(leftClicked)
             {
-                xPos2 = InputManger.CurrentMouseState.X;
-                yPos2 = InputManger.CurrentMouseState.Y;
+                xPos2 = InputManager.CurrentMouseState.X;
+                yPos2 = InputManager.CurrentMouseState.Y;
 
                 rWidth = xPos2 - xPos1; 
                 rHeight = yPos2 - yPos1;
@@ -92,10 +92,10 @@ namespace MonoPaint.ToolStrategy
                 currentShape.LoadWhileDrawing();
             }
 
-            if(InputManger.IsPressed(MouseInput.LeftButton))
+            if(InputManager.IsPressed(MouseInput.LeftButton))
                 leftClicked = true;
 
-            if(InputManger.IsReleased(Input.MouseInput.LeftButton))
+            if(InputManager.IsReleased(Input.MouseInput.LeftButton))
                 leftClicked = false;
         }
 

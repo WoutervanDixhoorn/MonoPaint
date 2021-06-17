@@ -48,7 +48,7 @@ namespace MonoPaint.ToolStrategy
             }
 
             /*TODO: Move to 'UI' or/and keyboard shortcut*/
-            if(InputManger.IsKeyPressed(Keys.B))
+            if(InputManager.IsKeyPressed(Keys.B))
             {
                 foreach(mCanvas c in playground.Canvases)
                 {
@@ -59,27 +59,47 @@ namespace MonoPaint.ToolStrategy
                 }
             }
             
-           if(leftClicked && !selecting && InputManger.IsKeyDown(Keys.LeftControl))
+            if(InputManager.IsKeyDown(Keys.LeftControl) && InputManager.IsKeyPressed(Keys.G))
+            {
+                List<aShape> selectedShapes = getSelectedShapes();
+                ShapeComposite group = null;
+                if(selectedShapes.Count > 0)
+                {
+                    group = new ShapeComposite();
+                    foreach(aShape s in selectedShapes)
+                    {
+                        group.Add(s);
+                    }
+                }
+                if(group != null){
+                    deleteShapes(selectedShapes);
+                    playground.AddShape(group);
+                }
+
+                Reset();
+            }
+
+            if(leftClicked && !selecting && InputManager.IsKeyDown(Keys.LeftControl))
             {
                 selecting = true;
 
-                int mX = InputManger.CurrentMouseState.X;
-                int mY = InputManger.CurrentMouseState.Y;
+                int mX = InputManager.CurrentMouseState.X;
+                int mY = InputManager.CurrentMouseState.Y;
 
                 selectionRect.X = mX;
                 selectionRect.Y = mY;
 
-            }else if(leftClicked && selecting && InputManger.IsKeyDown(Keys.LeftControl))
+            }else if(leftClicked && selecting && InputManager.IsKeyDown(Keys.LeftControl))
             {
-                int newWidth = Util.Clamp(InputManger.CurrentMouseState.X - selectionRect.X, 1, playground.Width);
-                int newHeight = Util.Clamp(InputManger.CurrentMouseState.Y - selectionRect.Y, 1, playground.Height);
+                int newWidth = Util.Clamp(InputManager.CurrentMouseState.X - selectionRect.X, 1, playground.Width);
+                int newHeight = Util.Clamp(InputManager.CurrentMouseState.Y - selectionRect.Y, 1, playground.Height);
 
                 Console.WriteLine("Width: " + newWidth);
 
                 selectionRect.Width = newWidth;
                 selectionRect.Height = newHeight;
                 selectionRect.Load();
-            }else if(!leftClicked && selecting && InputManger.IsKeyDown(Keys.LeftControl))
+            }else if(!leftClicked && selecting && InputManager.IsKeyDown(Keys.LeftControl))
             {
                 selecting = false;
 
@@ -108,42 +128,42 @@ namespace MonoPaint.ToolStrategy
 
             if(!typing){
                 //For adding text
-                if(InputManger.IsKeyPressed(Keys.Up))
+                if(InputManager.IsKeyPressed(Keys.Up))
                 {
                     typing = true;
                     AddText(TextPos.Top);
-                }else if(InputManger.IsKeyPressed(Keys.Left))
+                }else if(InputManager.IsKeyPressed(Keys.Left))
                 {
                     typing = true;
                     AddText(TextPos.Left);
-                }else if(InputManger.IsKeyPressed(Keys.Down))
+                }else if(InputManager.IsKeyPressed(Keys.Down))
                 {
                     typing = true;
                     AddText(TextPos.Bottom);
-                }else if(InputManger.IsKeyPressed(Keys.Right))
+                }else if(InputManager.IsKeyPressed(Keys.Right))
                 {
                     typing = true;
                     AddText(TextPos.Right);
                 }
             }
 
-            if(!typing && (InputManger.IsKeyPressed(Keys.Delete) || InputManger.IsKeyPressed(Keys.Back)))
+            if(!typing && (InputManager.IsKeyPressed(Keys.Delete) || InputManager.IsKeyPressed(Keys.Back)))
             {
                 deleteShapes();
             }
 
-            if(InputManger.IsPressed(MouseInput.LeftButton))
+            if(InputManager.IsPressed(MouseInput.LeftButton))
                 leftClicked = true;
 
-            if(InputManger.IsReleased(Input.MouseInput.LeftButton))
+            if(InputManager.IsReleased(Input.MouseInput.LeftButton))
                 leftClicked = false;
         }
 
 
         void SelectShape(aShape iShape)
         {          
-            int x = InputManger.CurrentMouseState.X;
-            int y = InputManger.CurrentMouseState.Y;
+            int x = InputManager.CurrentMouseState.X;
+            int y = InputManager.CurrentMouseState.Y;
 
             if(iShape.Contains(x, y))
             {
@@ -152,12 +172,12 @@ namespace MonoPaint.ToolStrategy
                 iShape.Hovered = false;
             }
 
-            if(leftClicked && InputManger.IsReleased(MouseInput.LeftButton))
+            if(leftClicked && InputManager.IsReleased(MouseInput.LeftButton))
             {
                 if(iShape.Hovered)
                 {
                     iShape.Selected = !iShape.Selected;
-                }else if(!InputManger.IsKeyDown(Keys.LeftShift)){
+                }else if(!InputManager.IsKeyDown(Keys.LeftShift)){
                     iShape.Selected = false;
                 }
             }
@@ -170,7 +190,7 @@ namespace MonoPaint.ToolStrategy
                 textBox.Draw(iSpriteBatch);
             }
 
-            if(leftClicked && InputManger.IsKeyDown(Keys.LeftControl))
+            if(leftClicked && InputManager.IsKeyDown(Keys.LeftControl))
                 selectionRect.Draw(iSpriteBatch, 0.8f);
         }
 
@@ -214,6 +234,20 @@ namespace MonoPaint.ToolStrategy
             textBox = null;
         }
 
+        List<aShape> getSelectedShapes()
+        {
+            List<aShape> selectedShapes = new List<aShape>();
+            foreach(mCanvas c in playground.Canvases)
+            {
+                c.ForAllShapes((aShape shape) => {
+                    if(shape.Selected)
+                        selectedShapes.Add(shape);
+                });
+            }
+
+            return selectedShapes;
+        }
+
         aShape getFirstSelectedShape()
         {
             foreach(mCanvas c in playground.Canvases)
@@ -227,6 +261,20 @@ namespace MonoPaint.ToolStrategy
                 }
             }
             return null;
+        }
+
+        void deleteShapes(List<aShape> shapes)
+        {
+            foreach(mCanvas c in playground.Canvases)
+            {
+                for(int i = 0; i < shapes.Count; i++)
+                {
+                    if(c.Shapes.Contains(shapes[i]))
+                    {
+                        c.Shapes.Remove(shapes[i]);
+                    }
+                }
+            }
         }
 
         void deleteShapes()

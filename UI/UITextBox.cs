@@ -62,8 +62,8 @@ namespace MonoPaint.UI
         bool leftClicked = false;
         public void Update()
         {
-            int mX = InputManger.CurrentMouseState.X;
-            int mY = InputManger.CurrentMouseState.Y;
+            int mX = InputManager.CurrentMouseState.X;
+            int mY = InputManager.CurrentMouseState.Y;
 
             if(IsOver(mX, mY))
             {
@@ -73,7 +73,7 @@ namespace MonoPaint.UI
             }
 
             //TODO: FIX
-            if(InputManger.IsKeyPressed(Keys.Enter))
+            if(InputManager.IsKeyPressed(Keys.Enter))
             {
                 focused = false;
                 MonoPaint.UnRegisterFocusedButtonForTextInput(OnInput);
@@ -85,10 +85,10 @@ namespace MonoPaint.UI
                 }
             }
 
-            if(InputManger.IsPressed(MouseInput.LeftButton))
+            if(InputManager.IsPressed(MouseInput.LeftButton))
                 leftClicked = true;
 
-            if(InputManger.IsReleased(Input.MouseInput.LeftButton))
+            if(InputManager.IsReleased(Input.MouseInput.LeftButton))
                 leftClicked = false;
         }
 

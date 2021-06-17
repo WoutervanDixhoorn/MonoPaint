@@ -30,7 +30,7 @@ namespace MonoPaint.FileParsing
             await File.WriteAllTextAsync(path, shapeStrings);
         }
 
-        public static async Task<List<aShape>> Deserialize(string path)
+        public static List<aShape> Deserialize(string path)
         {
             List<aShape> shapes = new List<aShape>();
 
@@ -51,6 +51,7 @@ namespace MonoPaint.FileParsing
             MatchCollection matchesGroups = rxGroup.Matches(shapeStrings);
 
             ShapeComposite group = new ShapeComposite();
+            ShapeComposite prevGroup = null;
             ShapeComposite underGroup = null;
             foreach (Match m in matchesGroups)
             {
@@ -72,18 +73,35 @@ namespace MonoPaint.FileParsing
                         underGroup.Add(newGroup);
                         underGroup = newGroup;
                     }else{
-                        group.Add(newGroup);
+                        prevGroup.Add(newGroup);
                         underGroup = newGroup;
                     }
                 }else{
+                    if(prevGroup != null)
+                    {
+                        shapes.Add(prevGroup);
+                        prevGroup = null;
+                    }
+                    if(group == null)
+                    {
+                        group = new ShapeComposite();
+                    }
                     List<aShape> temp = deserializeGroupShapes(gr);
                     foreach(aShape s in temp)
                     {
                         group.Add(s);
                     }
+                    prevGroup = group;
+                    group = null;
                 }
             }
-            shapes.Add(group);
+            if(prevGroup != null)
+            {
+                shapes.Add(prevGroup);
+                prevGroup = null;
+            }
+            if(group != null)
+                shapes.Add(group);
 
             MatchCollection matchesTextShapes = rxTextShape.Matches(shapeStrings);
 

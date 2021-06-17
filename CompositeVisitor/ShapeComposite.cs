@@ -41,13 +41,13 @@ namespace MonoPaint {
 
         public override int Width 
         {
-             get { return (int)dimensions.X; }
+             get { return (int)width; }
              set { setWidth(value); }
         }
 
         public override int Height 
         {
-             get { return (int)dimensions.Y; }
+             get { return (int)height; }
              set { setHeight(value); }
         }
 
@@ -94,7 +94,9 @@ namespace MonoPaint {
 
         List<aShape> shapes;
         
-        Vector2 dimensions;
+        Vector4 dimensions;
+
+        int width, height;
 
         public ShapeComposite()
         {
@@ -111,11 +113,15 @@ namespace MonoPaint {
         public void Add(aShape child){
             shapes.Add(child);
             dimensions = calculateDimensions();
+            width = (int)dimensions.Y - (int)dimensions.X;
+            height = (int)dimensions.W - (int)dimensions.Z;
         }
 
         public void Add(List<aShape> children){
             shapes.AddRange(children);
             dimensions = calculateDimensions();
+            width = (int)dimensions.Y - (int)dimensions.X;
+            height = (int)dimensions.W - (int)dimensions.Z;
         }
 
 
@@ -193,31 +199,49 @@ namespace MonoPaint {
             }
         }
 
-        Vector2 calculateDimensions()
+        public Vector4 calculateDimensions()
         {
             int leftX = int.MaxValue;
             int topY = int.MaxValue;
 
             int rightX = int.MinValue;
             int bottomY = int.MinValue;
-
+            
             foreach(aShape s in shapes)
             {
-                if(s.X < leftX)
-                    leftX = s.X;
-                if(s.X + s.Width > rightX)
-                    rightX = s.X + s.Width;
-                
-                if(s.Y < topY)
-                    topY = s.Y;
-                if(s.Y + s.Height > bottomY)
-                    bottomY = s.Y + s.Height;
+                // if(s.GetType() == typeof(ShapeComposite)){
+                //     ShapeComposite temp = (ShapeComposite)s;
+                //     Vector4 groupDim = temp.calculateDimensions();
+                //     int tempLeftX = (int)groupDim.X;
+                //     int tempRightX = (int)groupDim.Y;
+                //     int tempTopY = (int)groupDim.Z;
+                //     int tempBottomY = (int)groupDim.W;
+
+                //     if(tempLeftX < leftX)
+                //         leftX = s.X;
+                //     if(tempRightX > rightX)
+                //         rightX = tempRightX;
+                    
+                //     if(tempTopY < topY)
+                //         topY = tempTopY;
+                //     if(tempBottomY > bottomY)
+                //         bottomY = tempBottomY;
+                // }else{
+                    
+                    if(s.X < leftX)
+                        leftX = s.X;
+                    if(s.X + s.Width > rightX)
+                        rightX = s.X + s.Width;
+                    
+                    if(s.Y < topY)
+                        topY = s.Y;
+                    if(s.Y + s.Height > bottomY)
+                        bottomY = s.Y + s.Height;
+
+                // }
             }
 
-            int width = rightX - leftX;
-            int height = bottomY - topY;
-
-            return new Vector2(width, height);
+            return new Vector4(leftX, rightX, topY, bottomY);
         }
         
     }

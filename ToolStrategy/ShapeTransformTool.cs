@@ -33,8 +33,8 @@ namespace MonoPaint.ToolStrategy
         int startX, startY, endX, endY;
         public void Update()
         {   
-            int mX = InputManger.CurrentMouseState.X;
-            int mY = InputManger.CurrentMouseState.Y;
+            int mX = InputManager.CurrentMouseState.X;
+            int mY = InputManager.CurrentMouseState.Y;
 
             if(!transforming)
                 HoverShapes();
@@ -46,7 +46,7 @@ namespace MonoPaint.ToolStrategy
             }
 
 
-            if(leftClicked && InputManger.IsReleased(MouseInput.LeftButton) && transformingShape != null)
+            if(leftClicked && InputManager.IsReleased(MouseInput.LeftButton) && transformingShape != null)
             {
                 UpdateShapes();
             }else if(leftClicked && transformingShape != null){
@@ -56,10 +56,10 @@ namespace MonoPaint.ToolStrategy
                 ChangeWithTopRight(mX, mY);
             }
 
-            if(InputManger.IsPressed(MouseInput.LeftButton))
+            if(InputManager.IsPressed(MouseInput.LeftButton))
                 leftClicked = true;
 
-            if(InputManger.IsReleased(Input.MouseInput.LeftButton))
+            if(InputManager.IsReleased(Input.MouseInput.LeftButton))
                 leftClicked = false;
         }
 
@@ -84,13 +84,13 @@ namespace MonoPaint.ToolStrategy
 
         void HoverShapes()
         {
-            int mX = InputManger.CurrentMouseState.X;
-            int mY = InputManger.CurrentMouseState.Y;
+            int mX = InputManager.CurrentMouseState.X;
+            int mY = InputManager.CurrentMouseState.Y;
 
             foreach(mCanvas c in playground.Canvases)
             {
                 c.ForAllShapes((aShape shape) => {
-                    if(shape.Contains(InputManger.CurrentMouseState.X, InputManger.CurrentMouseState.Y)){
+                    if(shape.Contains(InputManager.CurrentMouseState.X, InputManager.CurrentMouseState.Y)){
                         shape.Hovered = true;
                     }else{
                         shape.Hovered = false;
@@ -101,10 +101,10 @@ namespace MonoPaint.ToolStrategy
 
         void SelectShapes()
         {
-            int mX = InputManger.CurrentMouseState.X;
-            int mY = InputManger.CurrentMouseState.Y;
+            int mX = InputManager.CurrentMouseState.X;
+            int mY = InputManager.CurrentMouseState.Y;
 
-            if(!leftClicked && InputManger.IsPressed(MouseInput.LeftButton)){
+            if(!leftClicked && InputManager.IsPressed(MouseInput.LeftButton)){
                 foreach(mCanvas c in playground.Canvases)
                 {
                     c.ForAllShapes((aShape shape) => {

@@ -61,8 +61,8 @@ namespace MonoPaint.UI
         bool pressed = false;
         public void Update()
         {
-            int mX = InputManger.CurrentMouseState.X;
-            int mY = InputManger.CurrentMouseState.Y;
+            int mX = InputManager.CurrentMouseState.X;
+            int mY = InputManager.CurrentMouseState.Y;
 
             if(IsOver(mX, mY))
             {
@@ -71,11 +71,11 @@ namespace MonoPaint.UI
                 buttonRect.Hovered = false;
             }
 
-            if(!pressed && InputManger.IsPressed(MouseInput.LeftButton) && buttonRect.Hovered)
+            if(!pressed && InputManager.IsPressed(MouseInput.LeftButton) && buttonRect.Hovered)
             {
                 pressed = true;
                 buttonAction();
-            }else if(pressed && InputManger.IsReleased(MouseInput.LeftButton))
+            }else if(pressed && InputManager.IsReleased(MouseInput.LeftButton))
             {
                 pressed = false;
             }

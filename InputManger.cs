@@ -15,7 +15,7 @@ namespace Input
         Button2
     }
     
-    public class InputManger
+    public class InputManager
     {
         static bool buttonClicked = false;
      

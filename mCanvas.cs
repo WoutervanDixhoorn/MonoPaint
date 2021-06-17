@@ -28,27 +28,6 @@ namespace MonoPaint
             width = iWidth;
             height = iHeight;
 
-            //Test composite
-            mRectangle rect1 = new mRectangle(30, 30, Color.Blue);
-            rect1.X = 100; rect1.Y = 100;
-            mRectangle rect2 = new mRectangle(40, 50, Color.Aqua);
-            rect2.X = 150; rect2.Y = 100;
-
-            ShapeComposite group = new ShapeComposite();
-            group.Add(rect1); group.Add(rect2);
-
-            // //Test composite
-            // mRectangle rect3 = new mRectangle(170, 80, Color.Blue);
-            // rect3.X = 300; rect3.Y = 100;
-            // mRectangle rect4 = new mRectangle(200, 50, Color.Aqua);
-            // rect4.X = 350; rect4.Y = 100;
-
-            // ShapeComposite group1 = new ShapeComposite();
-            // group1.Add(rect3); group1.Add(rect4);
-            // group.Add(group1);
-
-            shapes.Add(group);
-
             Console.WriteLine("Initialized canvas with: " + shapes.Count + " shapes");
         }
 
