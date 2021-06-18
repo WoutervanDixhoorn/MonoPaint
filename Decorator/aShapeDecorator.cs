@@ -70,9 +70,9 @@ namespace MonoPaint.Decorator
         {
             get { return decoratedShape.Transforming; }
             set { decoratedShape.Transforming = value;
-             if(decoratedShape.Transforming && decoratedShape.SelectionRect.SelectRect == null){
-                 GenerateTransformRect();
-               }}
+            if(decoratedShape.Transforming && decoratedShape.SelectionRect.SelectRect == null){
+                GenerateTransformRect();
+            }}
         }
 
         public override bool Hovered
