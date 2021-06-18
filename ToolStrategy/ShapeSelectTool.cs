@@ -62,8 +62,11 @@ namespace MonoPaint.ToolStrategy
             if(InputManager.IsKeyDown(Keys.LeftControl) && InputManager.IsKeyPressed(Keys.G))
             {
                 List<aShape> selectedShapes = getSelectedShapes();
+                ShapeComposite firstGroup = isGroupInSelection(selectedShapes);
+                if(firstGroup != null)
+                    selectedShapes.Remove(firstGroup);
                 ShapeComposite group = null;
-                if(selectedShapes.Count > 0)
+                if(selectedShapes.Count > 1)
                 {
                     group = new ShapeComposite();
                     foreach(aShape s in selectedShapes)
@@ -73,7 +76,10 @@ namespace MonoPaint.ToolStrategy
                 }
                 if(group != null){
                     deleteShapes(selectedShapes);
-                    playground.AddShape(group);
+                    if(firstGroup != null)
+                        firstGroup.Add(group);
+                    else
+                        playground.AddShape(group);
                 }
 
                 Reset();
@@ -232,6 +238,20 @@ namespace MonoPaint.ToolStrategy
             }
 
             textBox = null;
+        }
+
+        ShapeComposite isGroupInSelection(List<aShape> selection)
+        {
+            List<ShapeComposite> groups = new List<ShapeComposite>();
+           foreach(aShape shape in selection){
+                if(shape.GetType() == typeof(ShapeComposite)){
+                    ShapeComposite temp = (ShapeComposite)shape;
+                    groups.Add(temp);
+                }
+            }
+            if(groups.Count > 0)
+                return groups[0];
+            return null;
         }
 
         List<aShape> getSelectedShapes()

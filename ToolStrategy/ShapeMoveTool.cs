@@ -85,7 +85,7 @@ namespace MonoPaint.ToolStrategy
                 drawingShape.X = mX - deltaX;
                 drawingShape.Y = mY - deltaY;
             }else if(!leftClicked && moving)
-            {
+            {   	
                 moving = false;
 
                 playground.ExecuteCommand(new MoveCommand(group != null ? group : movingShape, drawingShape.X, drawingShape.Y));

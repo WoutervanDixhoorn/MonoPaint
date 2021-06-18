@@ -60,7 +60,6 @@ namespace MonoPaint.CompositeVisitor
 
         public void Visit(ShapeComposite group)
         {
-            
             for(int i = 0; i < groupLevel; i++)
                 tabPre += "\t";
 
